@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -24,11 +23,6 @@ public class TeleOp extends OpMode {
 	private double speed = 0.5;
 	private double armSpeed = 1.0;
 
-	private DcMotor left;
-	private DcMotor right;
-	private DcMotor front;
-	private DcMotor back;
-
 	private boolean last_x = false;
 	private boolean last_a = false;
 	private boolean last_y = false;
@@ -41,14 +35,9 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void init() {
-		//robot.init(hardwareMap, telemetry, this);
+		robot.init(hardwareMap, telemetry, this);
 		logger = new Logger(telemetry);
-		//this.msStuckDetectStop = 60000;
-
-		left = this.hardwareMap.get(DcMotor.class, "left");
-		right = this.hardwareMap.get(DcMotor.class, "right");
-		front = this.hardwareMap.get(DcMotor.class, "front");
-		back = this.hardwareMap.get(DcMotor.class, "back");
+		this.msStuckDetectStop = 60000;
 
 		// Step 0 - Initialized
 		logger.statusLog(0, "Initialized");
@@ -63,7 +52,7 @@ public class TeleOp extends OpMode {
 
 	}
 
-	//ElapsedTime timer = new ElapsedTime();
+	ElapsedTime timer = new ElapsedTime();
 
 	/**
 	 * Runs once after PLAY is pushed
@@ -77,7 +66,7 @@ public class TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
-		//timer.reset();
+		timer.reset();
 
 		/* Controller Layouts
 		 *
@@ -111,20 +100,6 @@ public class TeleOp extends OpMode {
 		 * Controller 1 settings
 		 */
 
-		float factor = 0.5f;
-		float leftPower = this.gamepad1.left_stick_y;
-		float rightPower = this.gamepad1.right_stick_y;
-
-		left.setPower(leftPower * factor);
-		right.setPower(rightPower * factor);
-
-		float frontPower = this.gamepad1.left_stick_x;
-		float backPower = this.gamepad1.right_stick_x;
-
-		front.setPower(frontPower * factor);
-		back.setPower(backPower * factor);
-
-		/*
 		singleJoystickDrive();
 
 		if (this.gamepad1.right_trigger > 0.5) {
@@ -177,12 +152,10 @@ public class TeleOp extends OpMode {
 		last_y = this.gamepad1.y;
 		last_b = this.gamepad1.b;
 
-		 */
 		/*
 		 * Controller 2 settings
 		 */
 
-		/*
 		if(this.gamepad2.right_stick_button && this.gamepad2.x) {
 			manualOverride = true;
 		}
@@ -243,16 +216,13 @@ public class TeleOp extends OpMode {
 			elevatorLimit = "Maximum";
 		}
 
-		*/
 //		logger.numberLog("Speed", speed);
 //		logger.completeLog("Elevator Limit?", elevatorLimit);
 //		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
 //		logger.numberLog("Switches full-half speed", switchCount);
 //		robot.logTeleOpData();
-		logger.completeLog("Left", left.getPower() + " : " + leftPower);
-		logger.completeLog("Right", right.getPower() + " : " + rightPower);
-		//logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
-		//logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
+		logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
+		logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
 		logger.update();
 
 	}
@@ -262,7 +232,7 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void stop() {
-		//robot.stopAllMotors();
+		robot.stopAllMotors();
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}
