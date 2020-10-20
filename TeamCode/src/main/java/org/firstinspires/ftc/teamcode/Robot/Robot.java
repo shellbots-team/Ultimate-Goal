@@ -29,55 +29,19 @@
 
 package org.firstinspires.ftc.teamcode.Robot;
 
-import android.util.Log;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorBNO055IMUCalibration;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Logger;
 
-import java.util.Locale;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.INCH;
 
-/**
- * This is NOT an opmode.
- * <p>
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- * <p>
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- * <p>
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
- */
 public class Robot {
 
 	private Logger logger = null;
@@ -100,16 +64,22 @@ public class Robot {
 
 
 	/* Constructor */
-	public Robot() {
+	public Robot() { }
 
-	}
-
-	/* Initialize standard Hardware interfaces */
+	/**
+	 * An initialization method to allocate everything needed for the robot to be setup
+	 *
+	 * @param hardwareMap The robots hardware map (for physical locations of hardware)
+	 * @param telemetry For outputting to the phones console
+	 * @param opmode To allow the robot to know if it is running or not
+	 */
 	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode) {
+		// Setup basic overall variables
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
 		this.opmode = opmode;
 
+		// Initialize specific robot parts
 		logger = new Logger(telemetry);
 		drivetrain = new Drivetrain(opmode);
 		arm = new Arm(opmode);
@@ -141,15 +111,17 @@ public class Robot {
 				this.hardwareMap.get(CRServo.class, "altLeftServo")
 		);
 
-		// Define and initialize ALL installed servos.
+		// Set servos
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
 		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
 
 		capstoneServo = this.hardwareMap.get(CRServo.class, "capstoneServo");
 
+		// Set distance sensors
 		leftDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "leftDistance");
 		rightDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "rightDistance");
 
+		// Set touch sensors
 		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
 		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
 
@@ -177,26 +149,9 @@ public class Robot {
 		setServoPosition(rightGrip, 0.9);
 	}
 
+	// TODO: Bad system to have setServoPosition here and in robot component instead extend CRServo class and implement it
 	public static void setServoPosition(CRServo crservo, double position) {
 		crservo.getController().setServoPosition(crservo.getPortNumber(), position);
-	}
-
-	/**
-	 * Sets the power for all passed motors to a given power
-	 *
-	 * @param power  The power to set the motors to (-1.0 to 1.0)
-	 * @param motors The motors to set to the given power
-	 */
-	protected void setSpecificPowers(double power, DcMotor... motors) {
-		for (DcMotor motor : motors) {
-			motor.setPower(power);
-		}
-	}
-
-	protected void setRunMode(DcMotor.RunMode runMode, DcMotor... motors) {
-		for (DcMotor motor : motors) {
-			motor.setMode(runMode);
-		}
 	}
 
 	private boolean opModeIsActive() {
