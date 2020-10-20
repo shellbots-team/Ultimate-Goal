@@ -5,25 +5,22 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Logger;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class ObjectDetection {
 
-	private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-	private static final String LABEL_FIRST_ELEMENT = "Stone";
-	private static final String LABEL_SECOND_ELEMENT = "Skystone";
+	private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
+	private static final String LABEL_FIRST_ELEMENT = "Quad";
+	private static final String LABEL_SECOND_ELEMENT = "Single";
 
-	private static final String VUFORIA_KEY = "AZUaS/D/////AAABmd9bAfIzFEvNp68QYPiUGWod1bqxZ/G6UuphfSOO67letJ25Ep2V5E/VfwlFektkz7sNxqkGiOXlTjCcLqVgj/eUwRxum4kkhFHDXZyjrKRb2U7xZaiv+tXxRLS52MnwFzzsUJZOZ0m9d5z3h0wBxL+yeA0bZHMKkIDdHlol+oxI+oTIlj/HtIJ0lqJMSBx40vrLg5Tx91849XDXFWtY9/CAsJbTUkYmLUniWHyolCF4UJ/mXSuyh0OMfaicPRPT4Ue0b0UKM9Z/PFOrqHeE57zO2e9zMBIG9ihPXbjF68ZZcAGfWIzA6uC3QdLwInO0DxR4iDCKqO6fCV+9EWQx8Xcde3yxdMX/E39+Sr+PpAw5";
+	private static final String VUFORIA_KEY = "AbvNjVH/////AAABmVkayA+Ah0Tct8evC0icZRZwcm2L+0efbPf1kZaN5sT94HCg5EGRv17PHjGEcUBgUh6/L5my6JfI+fjIwSf/FHAQiClUon4IwXoeT7rIKO1rjVrBKWmQggW2GfhvJ1rNiuFU1bfmWsuaHeo4APWeJ4nto7YvVMbVvRh8/N+11EpMOgfyMOYZFaQ/crgqP4yq231mSneK5EhUAsAU7myl4FFjoPg+K75z5BSklif09FlrKfvEc8PhIeAYg+XaOMOeZDWDO6As9tbXPNlAx/DecWiyNqiaSmX30rAdbp1o8nUkrLplTO2HJK4zoy6s7itGXDDQuJ2ZNfC8dIjPAOLEmX7zkF72J3Kq/cb7f5IG914M";
 
-	private static final double MINIMUM_CONFIDENCE = 0.35;
+	private static final float MINIMUM_CONFIDENCE = 0.8f;
 
 	private VuforiaLocalizer vuforia;
 	private TFObjectDetector tfod;
@@ -37,32 +34,23 @@ public class ObjectDetection {
 
 	}
 
-	public void initializeTFOD() {
-		if(tfod != null) {
-			tfod.activate();
-		}
-	}
-
-	public void stopTFOD() {
-		if(tfod != null) {
-			tfod.deactivate();
-		}
-	}
-
-	public void initializeObjectDetection() {
-
-		initVuforia();
-		initTfod();
-
-	}
-
-	public Recognition getSkyStone() {
+	/**
+	 * Check what and how many things have been detected and print out their values
+	 */
+	public void checkDetections() {
 		List<Recognition> updatedRecognitions;
 		if (tfod != null) {
 			// getUpdatedRecognitions() will return null if no new information is available since
 			// the last time that call was made.
 			updatedRecognitions = tfod.getUpdatedRecognitions();
 			if (updatedRecognitions != null) {
+				for (Recognition recognition : updatedRecognitions) {
+					logger.completeLog("ObjectDetection", recognition.toString());
+				}
+			}
+		}
+	}
+	/*
 				logger.numberLog("# Object Detected", updatedRecognitions.size());
 				updatedRecognitions.sort(new Comparator<Recognition>() {
 					@Override
@@ -89,7 +77,7 @@ public class ObjectDetection {
 				logger.update();
 				for (Recognition recognition : updatedRecognitions) {
 					if (recognition.getLabel().equals(LABEL_SECOND_ELEMENT)) {
-						logger.completeLog("ObjectDetection", "Found skystone");
+						logger.completeLog("ObjectDetection", "Found detection");
 						return recognition;
 					}
 				}
@@ -153,6 +141,9 @@ public class ObjectDetection {
 			}
 		};
 	}
+	*/
+
+	// Below is all the initialization/setup for object detection...
 
 	/**
 	 * Initialize the Vuforia localization engine.
@@ -179,8 +170,34 @@ public class ObjectDetection {
 		int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
 				"tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 		TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-		tfodParameters.minimumConfidence = MINIMUM_CONFIDENCE;
+		tfodParameters.minResultConfidence = MINIMUM_CONFIDENCE;
 		tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 		tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+	}
+
+	/**
+	 * Check if TFOD exists, and if it does activate it
+	 */
+	public void startTFOD() {
+		if(tfod != null) {
+			tfod.activate();
+		}
+	}
+
+	/**
+	 * Check if TFOD exists, and if it does stop deactivate it
+	 */
+	public void stopTFOD() {
+		if(tfod != null) {
+			tfod.deactivate();
+		}
+	}
+
+	/**
+	 * Initialize vuforia and then tensorflow object detection
+	 */
+	public void initializeObjectDetection() {
+		initVuforia();
+		initTfod();
 	}
 }

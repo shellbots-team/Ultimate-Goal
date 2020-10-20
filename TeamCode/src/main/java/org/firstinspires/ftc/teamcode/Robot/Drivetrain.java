@@ -28,21 +28,25 @@ public class Drivetrain extends RobotComponent {
 
 		logger = new Logger(telemetry);
 
+		// Save all passed motors
 		this.frontLeft = frontLeft;
 		this.frontRight = frontRight;
 		this.backLeft = backLeft;
 		this.backRight = backRight;
 
+		// Set them to have a target position of 0 (nothing)
 		frontLeft.setTargetPosition(0);
 		frontRight.setTargetPosition(0);
 		backLeft.setTargetPosition(0);
 		backRight.setTargetPosition(0);
 
+		// Set forward/reverse to account for position on the robot
 		frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 		backLeft.setDirection(DcMotor.Direction.REVERSE);
 		frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
 		backRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
+		// Set motors to actively break (resist movement) is they are given 0 power
 		frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
 		frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
 		backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors
@@ -50,6 +54,7 @@ public class Drivetrain extends RobotComponent {
 
 		setAllPowers(0);
 
+		// Set all motors to run using encoders
 		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
 	}
 
@@ -92,10 +97,12 @@ public class Drivetrain extends RobotComponent {
 
 	}
 
+	// Run a set number of inches on the left/right with default speed and no max time limit
 	public void runDistance(double leftInches, double rightInches) {
 		runDistance(leftInches, rightInches, 999, defaultSpeed);
 	}
 
+	// Run a set number of inches on the left/right with default speed and a max time limit in seconds
 	public void runDistance(double leftInches, double rightInches, double seconds) {
 		runDistance(leftInches, rightInches, seconds, defaultSpeed);
 	}
@@ -174,15 +181,6 @@ public class Drivetrain extends RobotComponent {
 		// Stop all motion
 		setAllPowers(0);
 	}
-
-	public void setPowerLeft(double power) {
-		setIndividualPowers(-power, power, power, -power);
-	}
-
-	public void setPowerRight(double power) {
-		setIndividualPowers(power,-power, -power, power);
-	}
-
 
 	/**
 	 * Sets all 4 motors on the drivetrain to a given power

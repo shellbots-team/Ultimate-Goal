@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 abstract class RobotComponent {
 
+	// Setting up constants used for run to position
 	static final double COUNTS_PER_MOTOR_REV = 400;    // eg: 1440 if TETRIX Motor Encoder
 	static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
 	static final double WHEEL_DIAMETER_INCHES = 3.75;     // For figuring circumference
@@ -22,10 +23,22 @@ abstract class RobotComponent {
 		this.opmode = opmode;
 	}
 
+	/**
+	 * Force all components to have a quick stop option
+	 */
 	public abstract void stopAllMotors();
 
+	/**
+	 * Force all componts to be able to log their data while in teleOp mode
+	 */
 	abstract void logTeleOpData();
 
+	/**
+	 * An easier way to set the position for a CRServo
+     *
+	 * @param crservo The servo that should have its position changed
+	 * @param position The position (0 to 1)
+	 */
 	void setServoPosition(CRServo crservo, double position) {
 		crservo.getController().setServoPosition(crservo.getPortNumber(), position);
 	}
@@ -42,12 +55,23 @@ abstract class RobotComponent {
 		}
 	}
 
-void setRunMode(DcMotor.RunMode runMode, DcMotor... motors) {
+	/**
+	 * Sets the run mode for all passed motors to a given mode
+	 *
+	 * @param runMode The DcMotor.RunMode to set the motors to
+	 * @param motors One or more motors to be set on that mode
+	 */
+	void setRunMode(DcMotor.RunMode runMode, DcMotor... motors) {
 		for (DcMotor motor : motors) {
 			motor.setMode(runMode);
 		}
 	}
 
+	/**
+	 * Tells if the opmode is active
+	 *
+	 * @return A true or false value of if opmode is active
+	 */
 	boolean opModeIsActive() {
 		if (opmode instanceof LinearOpMode) {
 			return ((LinearOpMode) opmode).opModeIsActive();
@@ -55,6 +79,11 @@ void setRunMode(DcMotor.RunMode runMode, DcMotor... motors) {
 		return true;
 	}
 
+	/**
+	 * Allow pausing of user-code execution for a set amount of time without breaking things
+	 *
+	 * @param milliseconds The time (in milliseconds) to pause for
+	 */
 	void sleep(long milliseconds) {
 		if (opmode instanceof LinearOpMode) {
 			((LinearOpMode) opmode).sleep(milliseconds);
