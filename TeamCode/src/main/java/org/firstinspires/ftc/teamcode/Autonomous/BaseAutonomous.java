@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Logger;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
+import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline.RingPosition;
 
 /**
  * Created by shell on 9/26/2020.
@@ -20,13 +21,11 @@ public abstract class BaseAutonomous extends LinearOpMode  {
     public int step = 0;
 
     void moveTowardsBlueAlliance(double distance, double maxSeconds, double speed) {
-        robot.drivetrain.runDistance(distance, -distance, -distance, distance, maxSeconds, speed);
-        //TODO: not sure which direction this drives
+        robot.drivetrain.runDistance(-distance, distance, distance, -distance, maxSeconds, speed);
     }
 
     void moveTowardsRedAlliance(double distance, double maxSeconds, double speed) {
-        robot.drivetrain.runDistance(-distance, distance, distance, -distance, maxSeconds, speed);
-        //TODO: not sure which direction this drives
+        robot.drivetrain.runDistance(distance, -distance, -distance, distance, maxSeconds, speed);
     }
 
     void moveTowardsDropZone(double distance, double maxSeconds, double speed) {
@@ -42,5 +41,7 @@ public abstract class BaseAutonomous extends LinearOpMode  {
     public void runOpMode() {
         robot.init(hardwareMap, telemetry, this);
         logger = new Logger(telemetry);
+        robot.cameraVision.start();
+        sleep(1000);
     }
 }

@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Robot;
 
+import android.graphics.Camera;
 import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -83,7 +84,7 @@ public class Robot {
 	private Logger logger = null;
 	public Drivetrain drivetrain = null;
 	public Arm arm = null;
-	// public ObjectDetection objectDetection = null;
+	public CameraVision cameraVision = null;
 	public Grabber grabber = null;
 	public TouchSensor minTouch = null;
 	public TouchSensor maxTouch = null;
@@ -109,7 +110,7 @@ public class Robot {
 		logger = new Logger(telemetry);
 		drivetrain = new Drivetrain(opmode);
 		arm = new Arm(opmode);
-		// objectDetection = new ObjectDetection(hardwareMap, telemetry);
+		cameraVision = new CameraVision(hardwareMap);
 		grabber = new Grabber(opmode);
 
 		drivetrain.init(
@@ -125,7 +126,7 @@ public class Robot {
 				this.hardwareMap.get(DcMotor.class, "leftArm"),
 				this.hardwareMap.get(DcMotor.class, "rightArm"),
 				this.hardwareMap.get(DcMotor.class, "extendArm"),
-				this.hardwareMap.get(CRServo.class, "rightHand"),
+				this.hardwareMap.get(CRServo.class, "hand"),
 				this.hardwareMap.get(DcMotor.class, "elevateArm")
 		);
 
