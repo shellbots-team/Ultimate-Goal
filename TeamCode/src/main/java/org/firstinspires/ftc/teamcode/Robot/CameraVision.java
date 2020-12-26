@@ -40,4 +40,12 @@ public class CameraVision {
 	public RingPosition getPosition() {
 		return pipeline.getRingPosition();
 	}
+
+	public int getAnalysis() {
+		return pipeline.getAnalysis();
+	}
+
+	public void save() {
+		pipeline.saveLastFrame();
+	}
 }

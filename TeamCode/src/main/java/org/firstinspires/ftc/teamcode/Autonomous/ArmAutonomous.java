@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline.RingP
  */
 
 @Autonomous
-public class MainAutonomous extends BaseAutonomous {
+public class ArmAutonomous extends BaseAutonomous {
 
 	@Override
 	public void runOpMode() {
@@ -23,21 +23,25 @@ public class MainAutonomous extends BaseAutonomous {
 		waitForStart();
 
 		logger.statusLog(step++, "Scanning ring position");
-		RingPosition ringPosition = robot.cameraVision.getPosition();
-		logger.completeLog("RingPosition", ringPosition.toString());
 		robot.cameraVision.end();
 
+		RingPosition ringPosition = robot.cameraVision.getPosition();
+		int analysis = robot.cameraVision.getAnalysis();
+		logger.completeLog("RingPosition", ringPosition.toString());
+		logger.completeLog("RingAnalysis", String.valueOf(analysis));
+		robot.cameraVision.save();
+
 		logger.statusLog(step++, "Moving off of wall");
-		robot.drivetrain.runDistance(16, 16, 99, 0.3);
+		robot.drivetrain.runDistance(16, 16, 99, 0.4);
 
 		logger.statusLog(step++, "Moving to be aligned with boxes");
-		moveTowardsBlueAlliance(20, 99, 0.05);
+		moveTowardsBlueAlliance(20, 99, 0.4);
 
 		logger.statusLog(step++, "Moving to be aligned with correct box");
 		if(ringPosition == RingPosition.NONE) {
 			robot.drivetrain.runDistance(62,62, 99, 0.4);
 		} else if(ringPosition == RingPosition.ONE) {
-			robot.drivetrain.runDistance(94,94, 99, 0.4);
+			robot.drivetrain.runDistance(92,92, 99, 0.4);
 		} else if(ringPosition == RingPosition.FOUR) {
 			robot.drivetrain.runDistance(116,116, 99, 0.4);
 		}
@@ -49,17 +53,23 @@ public class MainAutonomous extends BaseAutonomous {
 			moveTowardsBlueAlliance(30, 99, 0.3);
 		}
 
-		// Drop the stone
+		// Drop the goal
 		robot.arm.grabHand();
-		sleep(1500);
+		sleep(2000);
 		// Pick the hand back up
 		robot.arm.releaseHand();
-		sleep(1500);
+		sleep(2000);
+		// Drop the goal
+		robot.arm.grabHand();
+		sleep(2000);
+		// Pick the hand back up
+		robot.arm.releaseHand();
+		sleep(2000);
 
 		if(ringPosition == RingPosition.ONE) {
-			robot.drivetrain.runDistance(24,24, 99, 0.3);
+			robot.drivetrain.runDistance(30,30, 99, 0.3);
 		} else if(ringPosition == RingPosition.FOUR){
-			robot.drivetrain.runDistance(46,46, 99, 0.3);
+			robot.drivetrain.runDistance(54,54, 99, 0.3);
 		}
 
 		logger.statusLog(step++, "Stopping");
