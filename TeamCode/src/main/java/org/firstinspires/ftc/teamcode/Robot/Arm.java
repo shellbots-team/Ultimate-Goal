@@ -126,7 +126,7 @@ public class Arm extends RobotComponent {
 
 	public void grabHand() {
 		isGrabbing = true;
-		setServoPosition(rightHand, 0);
+		setServoPosition(rightHand, 0.3);
 	}
 
 	public void releaseHand() {

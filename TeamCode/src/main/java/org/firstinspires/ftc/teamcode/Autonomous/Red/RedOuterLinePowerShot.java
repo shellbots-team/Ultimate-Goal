@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
  */
 
 @Autonomous
+@Disabled
 public class RedOuterLinePowerShot extends BaseAutonomous {
 
     @Override

@@ -21,13 +21,18 @@
 
 package org.firstinspires.ftc.teamcode.vision;
 
+import android.os.Environment;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.io.File;
 
 public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 	/*
@@ -94,6 +99,8 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 		region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
 	}
 
+	Mat frame = null;
+
 	@Override
 	public Mat processFrame(Mat input)
 	{
@@ -134,6 +141,7 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 				// -1); // Negative thickness means solid fill
 				4); // Negative thickness means solid fill
 
+		frame = input;
 		return input;
 	}
 
@@ -149,5 +157,11 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 		}else{
 			return RingPosition.NONE;
 		}
+	}
+
+	public void saveLastFrame() {
+		File path = Environment.getExternalStoragePublicDirectory(
+				Environment.DIRECTORY_DCIM);
+		Imgcodecs.imwrite(path + "/1.jpg", frame);
 	}
 }

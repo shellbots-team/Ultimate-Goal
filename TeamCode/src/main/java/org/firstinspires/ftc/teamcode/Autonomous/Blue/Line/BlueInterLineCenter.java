@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous.Blue.Line;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseAutonomous;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseAutonomous;
  */
 
 @Autonomous
+@Disabled
 public class BlueInterLineCenter extends BaseAutonomous {
 
     @Override

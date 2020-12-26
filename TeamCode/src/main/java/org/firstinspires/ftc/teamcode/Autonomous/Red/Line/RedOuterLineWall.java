@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
  */
 
 @Autonomous
+@Disabled
 public class RedOuterLineWall extends BaseAutonomous {
 
     @Override
