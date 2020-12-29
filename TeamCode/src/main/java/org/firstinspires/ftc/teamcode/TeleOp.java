@@ -53,6 +53,8 @@ public class TeleOp extends OpMode {
 	}
 
 	ElapsedTime timer = new ElapsedTime();
+	int X = 0;
+	int Y = 0;
 
 	/**
 	 * Runs once after PLAY is pushed
@@ -61,6 +63,8 @@ public class TeleOp extends OpMode {
 	public void start() {
 		// Step 1 - Playing
 		logger.statusLog(0, "Playing");
+		X = SavedData.SavedX;
+		Y = SavedData.SavedY;
 	}
 
 	@Override
@@ -216,6 +220,8 @@ public class TeleOp extends OpMode {
 //		robot.logTeleOpData();
 		logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
 		logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
+		logger.numberLog("X Position", X);
+		logger.numberLog("Y Position", Y);
 		logger.update();
 
 	}

@@ -12,10 +12,10 @@ import java.util.Locale;
 
 public class Drivetrain extends RobotComponent {
 
-	private DcMotor frontLeft;
-	private DcMotor frontRight;
-	private DcMotor backLeft;
-	private DcMotor backRight;
+	public DcMotor frontLeft;
+	public DcMotor frontRight;
+	public DcMotor backLeft;
+	public DcMotor backRight;
 
 	private Logger logger = null;
 	public double defaultSpeed = 0.2;
