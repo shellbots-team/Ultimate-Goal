@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.R;
+import org.firstinspires.ftc.teamcode.SavedData;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline.RingPosition;
 
@@ -91,6 +92,8 @@ public class GrabberAutonomous extends BaseAutonomous {
 		}
 
  */
+		SavedData.save(robot.drivetrain.frontLeft.getCurrentPosition(),
+				robot.drivetrain.frontRight.getCurrentPosition());
 		logger.statusLog(step++, "Stopping");
 		robot.stopAllMotors();
 
