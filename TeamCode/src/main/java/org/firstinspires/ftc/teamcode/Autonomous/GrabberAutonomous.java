@@ -38,9 +38,38 @@ public class GrabberAutonomous extends BaseAutonomous {
 		moveTowardsBlueAlliance(20, 99, 0.4);
 
 		logger.statusLog(step++, "Front of Boxes");
-		robot.drivetrain.runDistance(47,62, 99, 0.4);
+		robot.drivetrain.runDistance(44,44, 99, 0.4);
 
-		moveTowardsRedAlliance(20, 99, 0.25);
+		if(ringPosition == RingPosition.ONE) {
+			moveTowardsRedAlliance(25, 99, 0.25);
+		} else { // Position None or Four
+			moveTowardsRedAlliance(54, 99, 0.25);
+		}
+
+		if(ringPosition == RingPosition.ONE) {
+			robot.drivetrain.runDistance(25,25, 99, 0.4);
+		} else if(ringPosition == RingPosition.FOUR) {
+			robot.drivetrain.runDistance(53,53, 99, 0.4);
+		}
+
+		robot.dropWobble();
+
+		sleep(2000);
+
+		if(ringPosition == RingPosition.NONE) {
+			robot.drivetrain.runDistance(-5, -5, 99, 0.4);
+			moveTowardsBlueAlliance(25, 99, 0.4);
+			robot.drivetrain.runDistance(20, 20, 99, 0.4);
+		} else if(ringPosition == RingPosition.ONE) {
+			robot.drivetrain.runDistance(-8, -8, 99, 0.4);
+		} else if(ringPosition == RingPosition.FOUR) {
+			robot.drivetrain.runDistance(-37, -37, 99, 0.4);
+		}
+
+		robot.resetWobble();
+
+		sleep(2000);
+
 /*
 		// Drop the goal
 		robot.arm.grabHand();

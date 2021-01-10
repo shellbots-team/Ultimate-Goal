@@ -90,6 +90,8 @@ public class Robot {
 	public TouchSensor maxTouch = null;
 	public DistanceSensor leftDistanceSensor = null;
 	public DistanceSensor rightDistanceSensor = null;
+	public CRServo leftGrip = null;
+	public CRServo rightGrip = null;
 
 	private HardwareMap hardwareMap = null;
 	private Telemetry telemetry = null;
@@ -138,6 +140,9 @@ public class Robot {
 				this.hardwareMap.get(CRServo.class, "altLeftServo")
 		);
 
+		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
+		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
+
 		leftDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "leftDistance");
 		rightDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "rightDistance");
 
@@ -179,6 +184,17 @@ public class Robot {
 		drivetrain.logTeleOpData();
 		arm.logTeleOpData();
 	}
+
+	public void resetWobble() {
+		setServoPosition(leftGrip, 1);
+		setServoPosition(rightGrip, 0);
+	}
+
+	public void dropWobble() {
+		setServoPosition(leftGrip, 0);
+		setServoPosition(rightGrip, 1);
+	}
+
 
 	public void driveUntilDistance(double speed, double distance) {
 		driveUntilDistance(speed, distance, distance);
