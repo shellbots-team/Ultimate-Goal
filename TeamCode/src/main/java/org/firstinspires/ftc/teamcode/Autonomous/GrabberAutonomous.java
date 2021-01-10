@@ -71,32 +71,12 @@ public class GrabberAutonomous extends BaseAutonomous {
 
 		sleep(2000);
 
-/*
-		// Drop the goal
-		robot.arm.grabHand();
-		sleep(2000);
-		// Pick the hand back up
-		robot.arm.releaseHand();
-		sleep(2000);
-		// Drop the goal
-		robot.arm.grabHand();
-		sleep(2000);
-		// Pick the hand back up
-		robot.arm.releaseHand();
-		sleep(2000);
-
-		if(ringPosition == RingPosition.ONE) {
-			robot.drivetrain.runDistance(30,30, 99, 0.3);
-		} else if(ringPosition == RingPosition.FOUR){
-			robot.drivetrain.runDistance(54,54, 99, 0.3);
-		}
-
- */
-		SavedData.save(robot.drivetrain.frontLeft.getCurrentPosition(),
-				robot.drivetrain.frontRight.getCurrentPosition());
 		logger.statusLog(step++, "Stopping");
 		robot.stopAllMotors();
-
+		int XValue = robot.drivetrain.frontLeft.getCurrentPosition();
+		int YValue = robot.drivetrain.frontRight.getCurrentPosition();
+		SavedData.save(XValue, YValue);
+		logger.completeLog("Positions X/Y", XValue + "/" + YValue);
 	}
 
 }
