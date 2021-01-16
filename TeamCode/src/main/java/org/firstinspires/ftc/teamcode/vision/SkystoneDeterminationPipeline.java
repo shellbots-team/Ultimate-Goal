@@ -55,23 +55,23 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 	 * TODO: ADJUST TO MATCH CAMERA
 	 */
 
+	/*
 	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(432, 136);
 
 	static final int REGION_WIDTH = 180;
 	static final int REGION_HEIGHT = 126;
 
-	final int FOUR_RING_THRESHOLD = 140;
+	final int FOUR_RING_THRESHOLD = 138;
 	final int ONE_RING_THRESHOLD = 130;
+	 */
 
-	/*
 	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(455, 140);
 
 	static final int REGION_WIDTH = 160;
 	static final int REGION_HEIGHT = 105;
 
-	final int FOUR_RING_THRESHOLD = 140;
+	final int FOUR_RING_THRESHOLD = 142;
 	final int ONE_RING_THRESHOLD = 130;
-	*/
 
 	Point region1_pointA = new Point(
 			REGION1_TOPLEFT_ANCHOR_POINT.x,

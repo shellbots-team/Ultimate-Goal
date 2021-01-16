@@ -12,10 +12,10 @@ public class Grabber extends RobotComponent {
 	}
 
 	Logger logger = null;
-	CRGrabber baseRightGrabber = new CRGrabber();
-	CRGrabber altRightGrabber = new CRGrabber();
-	CRGrabber baseLeftGrabber = new CRGrabber();
-	CRGrabber altLeftGrabber = new CRGrabber();
+	public CRGrabber baseRightGrabber = new CRGrabber();
+	public CRGrabber altRightGrabber = new CRGrabber();
+	public CRGrabber baseLeftGrabber = new CRGrabber();
+	public CRGrabber altLeftGrabber = new CRGrabber();
 	Side side = null;
 
 	void init(Telemetry telemetry, CRServo baseRightServo, CRServo altRightServo, CRServo baseLeftServo, CRServo altLeftServo) {
@@ -59,6 +59,13 @@ public class Grabber extends RobotComponent {
 		altRightGrabber.raise();
 		baseLeftGrabber.raise();
 		altLeftGrabber.raise();
+	}
+
+	public void lower() {
+		baseRightGrabber.lower();
+		altRightGrabber.lower();
+		baseLeftGrabber.lower();
+		altLeftGrabber.lower();
 	}
 
 	public void setSide(Side side) {

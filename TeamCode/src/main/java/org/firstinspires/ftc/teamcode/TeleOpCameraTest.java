@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
  * Created by shell on 9/26/2020.
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "Camera Test Manual Mode")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "Camera Test Manual")
 public class TeleOpCameraTest extends OpMode {
 
 	private Robot robot = new Robot();
@@ -68,7 +68,8 @@ public class TeleOpCameraTest extends OpMode {
 	@Override
 	public void loop() {
 		SkystoneDeterminationPipeline.RingPosition rp = robot.cameraVision.getPosition();
-		logger.completeLog("14736: Ring Position", rp.toString());
+		int analysis = robot.cameraVision.getAnalysis();
+		logger.completeLog("14736: Ring Position", rp.toString() + " " + String.valueOf(analysis));
 		logger.update();
 	}
 

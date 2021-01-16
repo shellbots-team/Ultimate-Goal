@@ -42,7 +42,7 @@ public class GrabberAutonomous extends BaseAutonomous {
 		robot.drivetrain.runDistance(44,44, 99, 0.4);
 
 		if(ringPosition == RingPosition.ONE) {
-			moveTowardsRedAlliance(25, 99, 0.25);
+			moveTowardsRedAlliance(20, 99, 0.25);
 		} else { // Position None or Four
 			moveTowardsRedAlliance(54, 99, 0.25);
 		}
@@ -55,19 +55,26 @@ public class GrabberAutonomous extends BaseAutonomous {
 
 		robot.dropWobble();
 
+		robot.grabber.baseRightGrabber.lower();
+		robot.grabber.altRightGrabber.raise();
+
 		sleep(2000);
 
 		if(ringPosition == RingPosition.NONE) {
 			robot.drivetrain.runDistance(-5, -5, 99, 0.4);
+
 			moveTowardsBlueAlliance(25, 99, 0.4);
 			robot.drivetrain.runDistance(20, 20, 99, 0.4);
 		} else if(ringPosition == RingPosition.ONE) {
 			robot.drivetrain.runDistance(-8, -8, 99, 0.4);
 		} else if(ringPosition == RingPosition.FOUR) {
-			robot.drivetrain.runDistance(-37, -37, 99, 0.4);
+			robot.drivetrain.runDistance(-35, -35, 99, 0.4);
 		}
 
 		robot.resetWobble();
+
+		robot.grabber.baseRightGrabber.raise();
+		robot.grabber.altRightGrabber.lower();
 
 		sleep(2000);
 

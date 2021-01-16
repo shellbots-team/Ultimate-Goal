@@ -18,7 +18,6 @@ public class TeleOp extends OpMode {
 	private Robot robot = new Robot();
 	private Logger logger = null;
 	private String elevatorLimit = "";
-	private int switchCount = 0;
 
 	private double speed = 0.5;
 	private double armSpeed = 1.0;
@@ -107,10 +106,8 @@ public class TeleOp extends OpMode {
 		singleJoystickDrive();
 
 		if (this.gamepad1.right_trigger > 0.5) {
-			if(speed == 0.5) { switchCount += 1; }
 			speed = 1.0;
 		} else if (this.gamepad1.left_trigger > 0.5) {
-			if(speed == 1.0) { switchCount += 1; }
 			speed = 0.5;
 		} else if (this.gamepad1.right_bumper) {
 			speed = 0.25;
@@ -216,7 +213,6 @@ public class TeleOp extends OpMode {
 //		logger.numberLog("Speed", speed);
 //		logger.completeLog("Elevator Limit?", elevatorLimit);
 //		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
-//		logger.numberLog("Switches full-half speed", switchCount);
 //		robot.logTeleOpData();
 		logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
 		logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
