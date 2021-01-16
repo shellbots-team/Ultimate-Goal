@@ -203,6 +203,16 @@ public class Drivetrain extends RobotComponent {
 		backRight.setPower(motorPowers[3]);
 	}
 
+	public void setIndividualPowers(float[] motorPowers) {
+		if (motorPowers.length != 4) {
+			return;
+		}
+		frontLeft.setPower(motorPowers[0]);
+		frontRight.setPower(motorPowers[1]);
+		backLeft.setPower(motorPowers[2]);
+		backRight.setPower(motorPowers[3]);
+	}
+
 	/**
 	 * Sets the powers of all motors in the drive train to a different power
 	 *

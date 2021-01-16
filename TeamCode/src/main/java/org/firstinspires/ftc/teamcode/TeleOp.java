@@ -51,7 +51,6 @@ public class TeleOp extends OpMode {
 
 	}
 
-	ElapsedTime timer = new ElapsedTime();
 	int X = 0;
 	int Y = 0;
 
@@ -62,15 +61,12 @@ public class TeleOp extends OpMode {
 	public void start() {
 		// Step 1 - Playing
 		logger.statusLog(0, "Playing");
-		X = SavedData.SavedX;
-		Y = SavedData.SavedY;
+		// X = SavedData.SavedX;
+		// Y = SavedData.SavedY;
 	}
 
 	@Override
 	public void loop() {
-
-		timer.reset();
-
 		/* Controller Layouts
 		 *
 		 * Controller 1 - "Body Controller"
@@ -117,16 +113,16 @@ public class TeleOp extends OpMode {
 			robot.grabber.home();
 		}
 
-		if (this.gamepad1.dpad_up) {
-		} else if (this.gamepad1.dpad_down) {
-		}
+		// if (this.gamepad1.dpad_up) {
+		// } else if (this.gamepad1.dpad_down) {
+		// }
 
-		if (this.gamepad1.dpad_left) {
-		} else if (this.gamepad1.dpad_right) {
-		} else if (this.gamepad2.x) {
-		} else if (this.gamepad2.b) {
-		} else {
-		}
+		// if (this.gamepad1.dpad_left) {
+		// } else if (this.gamepad1.dpad_right) {
+		// } else if (this.gamepad2.x) {
+		// } else if (this.gamepad2.b) {
+		// } else {
+		// }
 
 		if (this.gamepad1.x && this.gamepad1.x != last_x) { // Left Big Arm
 			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.LEFT);
@@ -150,9 +146,9 @@ public class TeleOp extends OpMode {
 		 * Controller 2 settings
 		 */
 
-		if(this.gamepad2.right_stick_button && this.gamepad2.x) {
-			manualOverride = true;
-		}
+		// if(this.gamepad2.right_stick_button && this.gamepad2.x) {
+		// 	manualOverride = true;
+		// }
 
 		if (this.gamepad2.right_trigger > 0.5) {
 			robot.arm.extendWithPower(0.55);
@@ -177,10 +173,10 @@ public class TeleOp extends OpMode {
 			robot.arm.raiseWithPower(0);
 		}
 
-		if (this.gamepad2.dpad_left) {
-		}
-		if (this.gamepad2.dpad_right) {
-		}
+		// if (this.gamepad2.dpad_left) {
+		// }
+		// if (this.gamepad2.dpad_right) {
+		// }
 
 		if(this.gamepad2.y) {
 			robot.arm.grabHand();
@@ -188,27 +184,27 @@ public class TeleOp extends OpMode {
 			robot.arm.releaseHand();
 		}
 
-		if (this.gamepad2.x) {
-		}
-		if (this.gamepad2.b) {
-		}
+		// if (this.gamepad2.x) {
+		// }
+		// if (this.gamepad2.b) {
+		// }
 
-		if (this.gamepad2.right_stick_button && (manualOverride || !robot.maxTouch.isPressed())) { // Up
-			robot.arm.elevateWithPower(-1.0);
-		} else if (this.gamepad2.left_stick_button && (manualOverride || !robot.minTouch.isPressed())) { // Down
-			robot.arm.elevateWithPower(1.0);
-		} else {
-			robot.arm.elevateWithPower(0);
-		}
+		// if (this.gamepad2.right_stick_button && (manualOverride || !robot.maxTouch.isPressed())) { // Up
+		// 	robot.arm.elevateWithPower(-1.0);
+		// } else if (this.gamepad2.left_stick_button && (manualOverride || !robot.minTouch.isPressed())) { // Down
+		// 	robot.arm.elevateWithPower(1.0);
+		// } else {
+		// 	robot.arm.elevateWithPower(0);
+		// }
 
-		elevatorLimit = "None";
-		if(robot.minTouch.isPressed() && robot.maxTouch.isPressed()) {
-			elevatorLimit = "Error";
-		} else if(robot.minTouch.isPressed()) {
-			elevatorLimit = "Minimum";
-		} else if(robot.maxTouch.isPressed()) {
-			elevatorLimit = "Maximum";
-		}
+		// elevatorLimit = "None";
+		// if(robot.minTouch.isPressed() && robot.maxTouch.isPressed()) {
+		// 	elevatorLimit = "Error";
+		// } else if(robot.minTouch.isPressed()) {
+		// 	elevatorLimit = "Minimum";
+		// } else if(robot.maxTouch.isPressed()) {
+		// 	elevatorLimit = "Maximum";
+		// }
 
 //		logger.numberLog("Speed", speed);
 //		logger.completeLog("Elevator Limit?", elevatorLimit);
@@ -216,8 +212,8 @@ public class TeleOp extends OpMode {
 //		robot.logTeleOpData();
 		logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
 		logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
-		logger.numberLog("X Position", X);
-		logger.numberLog("Y Position", Y);
+		// logger.numberLog("X Position", X);
+		// logger.numberLog("Y Position", Y);
 		logger.update();
 
 	}
@@ -233,37 +229,34 @@ public class TeleOp extends OpMode {
 	}
 
 	private void singleJoystickDrive() {
-		double leftX = this.gamepad1.left_stick_x;
-		double leftY = this.gamepad1.left_stick_y;
-		double rightX = this.gamepad1.right_stick_x;
+		float leftX = this.gamepad1.left_stick_x;
+		float leftY = this.gamepad1.left_stick_y;
+		float rightX = this.gamepad1.right_stick_x;
 
-		double[] motorPowers = new double[4];
+		float[] motorPowers = new float[4];
 		motorPowers[0] = (leftY-leftX-rightX);// -+
 		motorPowers[1] = (leftY+leftX+rightX);// +-
 		motorPowers[2] = (leftY+leftX-rightX);// ++
 		motorPowers[3] = (leftY-leftX+rightX);// --
 
-		double max = Math.abs(getLargestAbsVal(motorPowers));
+		float max = getLargestAbsVal(motorPowers);
 		if(max < 1) { max = 1; }
 
 		for(int i = 0; i < motorPowers.length; i++) {
-			motorPowers[i] /= max;
-		}
+			motorPowers[i] *= (speed / max);
 
-		for(int i = 0; i < motorPowers.length; i++) {
-			if(motorPowers[i] < 0.05 && motorPowers[i] > -0.05) { motorPowers[i] = 0.0; }
-			if(motorPowers[i] > 1.0) { motorPowers[i] = 1.0; }
-			if(motorPowers[i] < -1.0) { motorPowers[i] = -1.0; }
-			motorPowers[i] *= speed;
+			float abs = Math.abs(motorPowers[i]);
+			if(abs < 0.05) { motorPowers[i] = 0.0f; }
+			if(abs > 1.0) { motorPowers[i] /= abs; }
 			logger.numberLog("Motor" + i, motorPowers[i]);
 		}
 
 		robot.drivetrain.setIndividualPowers(motorPowers);
 	}
 
-	private double getLargestAbsVal(double[] values) {
-		double max = 0;
-		for(double val : values) {
+	private float getLargestAbsVal(float[] values) {
+		float max = 0;
+		for(float val : values) {
 			if(Math.abs(val) > max) { max = Math.abs(val); }
 		}
 		return max;
