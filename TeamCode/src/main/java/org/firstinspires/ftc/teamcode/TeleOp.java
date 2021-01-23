@@ -18,37 +18,15 @@ public class TeleOp extends OpMode {
 
 	private Robot robot = new Robot();
 	private Logger logger = null;
-	private String elevatorLimit = "";
-	private int switchCount = 0;
-
 	private double speed = 0.5;
-	private double armSpeed = 1.0;
-
-	private DcMotor left;
-	private DcMotor right;
-	private DcMotor front;
-	private DcMotor back;
-
-	private boolean last_x = false;
-	private boolean last_a = false;
-	private boolean last_y = false;
-	private boolean last_b = false;
-
-	private boolean manualOverride = false;
 
 	/**
 	 * Run once after INIT is pushed
 	 */
 	@Override
 	public void init() {
-		//robot.init(hardwareMap, telemetry, this);
+		robot.init(hardwareMap, telemetry, this);
 		logger = new Logger(telemetry);
-		//this.msStuckDetectStop = 60000;
-
-		left = this.hardwareMap.get(DcMotor.class, "left");
-		right = this.hardwareMap.get(DcMotor.class, "right");
-		front = this.hardwareMap.get(DcMotor.class, "front");
-		back = this.hardwareMap.get(DcMotor.class, "back");
 
 		// Step 0 - Initialized
 		logger.statusLog(0, "Initialized");
@@ -63,8 +41,6 @@ public class TeleOp extends OpMode {
 
 	}
 
-	//ElapsedTime timer = new ElapsedTime();
-
 	/**
 	 * Runs once after PLAY is pushed
 	 */
@@ -76,184 +52,15 @@ public class TeleOp extends OpMode {
 
 	@Override
 	public void loop() {
-
-		//timer.reset();
-
-		/* Controller Layouts
-		 *
-		 * Controller 1 - "Body Controller"
-		 *      Left Trigger     - Set full speed
-		 *      Right Trigger    - Set half speed
-		 *
-		 *      Dpad Up          - Release Foundation / Move lower servos up
-		 *      Dpad Down        - Grab Foundation / Move lower servos down
-		 *
-		 *      Left Joystick Y  - Move the robot forward/backward
-		 *      Left Joystick X  - Move the robot left/right
-		 *
-		 *      Right Joystick X - Turn the robot
-		 *
-		 *      A + Y = Single joystick drive
-		 *      X + B = Two joystick drive
-		 *
-		 * Controller 2 - "Arm Controller"
-		 *      Right Trigger    - Extends arm
-		 *      Left Trigger     - Detracts arm
-		 *
-		 *      Dpad Up          - Raise the arm
-		 *      Dpad Down        - Lower the arm
-		 *
-		 *      Y Button         - Grab blocks with the hand
-		 *      A Button         - Release blocks with the hand
-		 */
-
-		/*
-		 * Controller 1 settings
-		 */
-
-		float factor = 0.5f;
-		float leftPower = this.gamepad1.left_stick_y;
-		float rightPower = this.gamepad1.right_stick_y;
-
-		left.setPower(leftPower * factor);
-		right.setPower(rightPower * factor);
-
-		float frontPower = this.gamepad1.left_stick_x;
-		float backPower = this.gamepad1.right_stick_x;
-
-		front.setPower(frontPower * factor);
-		back.setPower(backPower * factor);
-
-		/*
 		singleJoystickDrive();
 
 		if (this.gamepad1.right_trigger > 0.5) {
-			if(speed == 0.5) { switchCount += 1; }
 			speed = 1.0;
 		} else if (this.gamepad1.left_trigger > 0.5) {
-			if(speed == 1.0) { switchCount += 1; }
 			speed = 0.5;
 		} else if (this.gamepad1.right_bumper) {
 			speed = 0.25;
 		}
-
-		if (this.gamepad1.left_bumper) {
-			robot.grabber.home();
-		}
-
-		if (this.gamepad1.dpad_up) {
-			robot.releaseFoundation();
-		} else if (this.gamepad1.dpad_down) {
-			robot.grabFoundation();
-		}
-
-		if (this.gamepad1.dpad_left) {
-			robot.lowerCapstone();
-		} else if (this.gamepad1.dpad_right) {
-			robot.raiseCapstone();
-		} else if(this.gamepad2.x) {
-			robot.lowerCapstone();
-		} else if(this.gamepad2.b) {
-			robot.raiseCapstone();
-		} else {
-			robot.stopCapstone();
-		}
-
-		if (this.gamepad1.x && this.gamepad1.x != last_x) { // Left Big Arm
-			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.LEFT);
-		}
-		if (this.gamepad1.a && this.gamepad1.a != last_a) { // Left Little Arm
-			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.LEFT);
-		}
-		if (this.gamepad1.y && this.gamepad1.y != last_y) { // Right Big Arm
-			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.RIGHT);
-		}
-		if (this.gamepad1.b && this.gamepad1.b != last_b) { // Right Little Arm
-			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.RIGHT);
-		}
-
-		last_x = this.gamepad1.x;
-		last_a = this.gamepad1.a;
-		last_y = this.gamepad1.y;
-		last_b = this.gamepad1.b;
-
-		 */
-		/*
-		 * Controller 2 settings
-		 */
-
-		/*
-		if(this.gamepad2.right_stick_button && this.gamepad2.x) {
-			manualOverride = true;
-		}
-
-		if (this.gamepad2.right_trigger > 0.5) {
-			robot.arm.extendWithPower(0.55);
-		} else if (this.gamepad2.left_trigger > 0.5) {
-			robot.arm.extendWithPower(-0.55);
-		} else {
-			robot.arm.extendWithPower(0);
-		}
-
-		if (this.gamepad2.right_bumper) {
-			armSpeed = 1.0;
-		}
-		if (this.gamepad2.left_bumper) {
-			armSpeed = 0.5;
-		}
-
-		if (this.gamepad2.dpad_up) {
-			robot.arm.raiseWithPower(1 * armSpeed);
-		} else if (this.gamepad2.dpad_down) {
-			robot.arm.lowerWithPower(0.20);
-		} else {
-			robot.arm.raiseWithPower(0);
-		}
-
-		if (this.gamepad2.dpad_left) {
-		}
-		if (this.gamepad2.dpad_right) {
-		}
-
-		if(this.gamepad2.y) {
-			robot.arm.grabHand();
-		} else if (this.gamepad2.a) {
-			robot.arm.releaseHand();
-		}
-
-		if (this.gamepad2.x) {
-		}
-		if (this.gamepad2.b) {
-		}
-
-		if (this.gamepad2.right_stick_button && (manualOverride || !robot.maxTouch.isPressed())) { // Up
-			robot.arm.elevateWithPower(-1.0);
-		} else if (this.gamepad2.left_stick_button && (manualOverride || !robot.minTouch.isPressed())) { // Down
-			robot.arm.elevateWithPower(1.0);
-		} else {
-			robot.arm.elevateWithPower(0);
-		}
-
-		elevatorLimit = "None";
-		if(robot.minTouch.isPressed() && robot.maxTouch.isPressed()) {
-			elevatorLimit = "Error";
-		} else if(robot.minTouch.isPressed()) {
-			elevatorLimit = "Minimum";
-		} else if(robot.maxTouch.isPressed()) {
-			elevatorLimit = "Maximum";
-		}
-
-		*/
-//		logger.numberLog("Speed", speed);
-//		logger.completeLog("Elevator Limit?", elevatorLimit);
-//		logger.completeLog("Elevator Manually Overridden?", manualOverride ? "True" : "False");
-//		logger.numberLog("Switches full-half speed", switchCount);
-//		robot.logTeleOpData();
-		logger.completeLog("Left", left.getPower() + " : " + leftPower);
-		logger.completeLog("Right", right.getPower() + " : " + rightPower);
-		//logger.numberLog("LeftDistance", robot.leftDistanceSensor.getDistance(DistanceUnit.INCH));
-		//logger.numberLog("RightDistance", robot.rightDistanceSensor.getDistance(DistanceUnit.INCH) - 1.6);
-		logger.update();
 
 	}
 

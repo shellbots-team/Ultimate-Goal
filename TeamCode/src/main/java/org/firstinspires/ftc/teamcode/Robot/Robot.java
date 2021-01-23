@@ -46,17 +46,6 @@ public class Robot {
 
 	private Logger logger = null;
 	public Drivetrain drivetrain = null;
-	public Arm arm = null;
-	public ObjectDetection objectDetection = null;
-	public Grabber grabber = null;
-	public TouchSensor minTouch = null;
-	public TouchSensor maxTouch = null;
-	public CRServo capstoneServo = null;
-	public DistanceSensor leftDistanceSensor = null;
-	public DistanceSensor rightDistanceSensor = null;
-
-	public CRServo leftGrip = null;
-	public CRServo rightGrip = null;
 
 	private HardwareMap hardwareMap = null;
 	private Telemetry telemetry = null;
@@ -82,71 +71,15 @@ public class Robot {
 		// Initialize specific robot parts
 		logger = new Logger(telemetry);
 		drivetrain = new Drivetrain(opmode);
-		arm = new Arm(opmode);
-		objectDetection = new ObjectDetection(hardwareMap, telemetry);
-		grabber = new Grabber(opmode);
 
 		drivetrain.init(
 				telemetry,
-				this.hardwareMap.get(DcMotor.class, "frontLeft"),
-				this.hardwareMap.get(DcMotor.class, "frontRight"),
-				this.hardwareMap.get(DcMotor.class, "backLeft"),
-				this.hardwareMap.get(DcMotor.class, "backRight")
+				this.hardwareMap.get(DcMotor.class, "leftFront"),
+				this.hardwareMap.get(DcMotor.class, "rightFront"),
+				this.hardwareMap.get(DcMotor.class, "leftRear"),
+				this.hardwareMap.get(DcMotor.class, "rightRear")
 		);
 
-		arm.init(
-				telemetry,
-				this.hardwareMap.get(DcMotor.class, "leftArm"),
-				this.hardwareMap.get(DcMotor.class, "rightArm"),
-				this.hardwareMap.get(DcMotor.class, "extendArm"),
-				this.hardwareMap.get(CRServo.class, "rightHand"),
-				this.hardwareMap.get(DcMotor.class, "elevateArm")
-		);
-
-		grabber.init(
-				telemetry,
-				this.hardwareMap.get(CRServo.class, "baseRightServo"),
-				this.hardwareMap.get(CRServo.class, "altRightServo"),
-				this.hardwareMap.get(CRServo.class, "baseLeftServo"),
-				this.hardwareMap.get(CRServo.class, "altLeftServo")
-		);
-
-		// Set servos
-		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
-		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
-
-		capstoneServo = this.hardwareMap.get(CRServo.class, "capstoneServo");
-
-		// Set distance sensors
-		leftDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "leftDistance");
-		rightDistanceSensor = this.hardwareMap.get(DistanceSensor.class, "rightDistance");
-
-		// Set touch sensors
-		minTouch = this.hardwareMap.get(TouchSensor.class, "minTouch");
-		maxTouch = this.hardwareMap.get(TouchSensor.class, "maxTouch");
-
-	}
-
-	public void raiseCapstone() {
-		capstoneServo.setPower(-1.0);
-	}
-
-	public void lowerCapstone() {
-		capstoneServo.setPower(1.0);
-	}
-
-	public void stopCapstone() {
-		capstoneServo.setPower(0.0);
-	}
-
-	public void releaseFoundation() {
-		setServoPosition(leftGrip, 1);
-		setServoPosition(rightGrip, 0);
-	}
-
-	public void grabFoundation() {
-		setServoPosition(leftGrip, 0);
-		setServoPosition(rightGrip, 0.9);
 	}
 
 	// TODO: Bad system to have setServoPosition here and in robot component instead extend CRServo class and implement it
@@ -163,40 +96,10 @@ public class Robot {
 
 	public void logTeleOpData() {
 		drivetrain.logTeleOpData();
-		arm.logTeleOpData();
-	}
-
-	public void driveUntilDistance(double speed, double distance) {
-		driveUntilDistance(speed, distance, distance);
-	}
-
-	public void driveUntilDistance(double speed, double leftFinalDistance, double rightFinalDistance) {
-		logger.completeLog("Status", "Began reading distance");
-		while(opModeIsActive()) {
-			double leftDistance = leftDistanceSensor.getDistance(INCH);
-			double rightDistance = rightDistanceSensor.getDistance(INCH) - 1.6;
-
-			double chance = 2;
-			if(Math.abs(leftDistance - leftFinalDistance) < chance && Math.abs(rightDistance - rightFinalDistance) < chance) { break; }
-			if(leftDistance < leftFinalDistance && rightDistance < rightFinalDistance) {
-				drivetrain.setAllPowers(speed);
-			} else if(leftDistance < leftFinalDistance) {
-				drivetrain.setIndividualPowers(speed, -speed, speed, -speed);
-			} else if(rightDistance < rightFinalDistance) {
-				drivetrain.setIndividualPowers(-speed, speed, -speed, speed);
-			} else {
-				drivetrain.setAllPowers(-speed);
-			}
-			logger.numberLog("Left Distance", leftDistance);
-			logger.numberLog("Right Distance", rightDistance);
-			if(rightDistance > 200 || leftDistance > 200) { throw new RuntimeException("Distance sensor broken"); }
-		}
-		drivetrain.setAllPowers(0);
 	}
 
 	public void stopAllMotors() {
 		drivetrain.stopAllMotors();
-		arm.stopAllMotors();
 	}
 
 }
