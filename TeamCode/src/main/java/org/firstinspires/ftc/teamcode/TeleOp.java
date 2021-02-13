@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Robot.Grabber;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 
@@ -109,33 +107,19 @@ public class TeleOp extends OpMode {
 			speed = 0.25;
 		}
 
-		if (this.gamepad1.left_bumper) {
-			robot.grabber.home();
-		}
-
-		// if (this.gamepad1.dpad_up) {
-		// } else if (this.gamepad1.dpad_down) {
-		// }
-
-		// if (this.gamepad1.dpad_left) {
-		// } else if (this.gamepad1.dpad_right) {
-		// } else if (this.gamepad2.x) {
-		// } else if (this.gamepad2.b) {
-		// } else {
-		// }
-
-		if (this.gamepad1.x && this.gamepad1.x != last_x) { // Left Big Arm
-			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.LEFT);
-		}
-		if (this.gamepad1.a && this.gamepad1.a != last_a) { // Left Little Arm
-			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.LEFT);
-		}
-		if (this.gamepad1.y && this.gamepad1.y != last_y) { // Right Big Arm
-			robot.grabber.flip(Grabber.Level.BASE, Grabber.Side.RIGHT);
-		}
-		if (this.gamepad1.b && this.gamepad1.b != last_b) { // Right Little Arm
-			robot.grabber.flip(Grabber.Level.ALT, Grabber.Side.RIGHT);
-		}
+//		if (this.gamepad1.dpad_up) {
+//			robot.wobbleGoalArm.giveArmPower(0.6);
+//		} else if (this.gamepad1.dpad_down) {
+//			robot.wobbleGoalArm.giveArmPower(-0.6);
+//		} else {
+//			robot.wobbleGoalArm.giveArmPower(0);
+//		}
+//
+//		if (this.gamepad1.dpad_left) {
+//			robot.wobbleGoalArm.grabWobbleGoal();
+//		} else if (this.gamepad1.dpad_right) {
+//			robot.wobbleGoalArm.releaseWobbleGoal();
+//		}
 
 		last_x = this.gamepad1.x;
 		last_a = this.gamepad1.a;
@@ -171,6 +155,20 @@ public class TeleOp extends OpMode {
 			robot.arm.lowerWithPower(0.20);
 		} else {
 			robot.arm.raiseWithPower(0);
+		}
+
+		if(this.gamepad2.b) {
+			robot.wobbleGoalArm.releaseWobbleGoal();
+		} else if(this.gamepad2.x) {
+			robot.wobbleGoalArm.grabWobbleGoal();
+		}
+
+		if(this.gamepad2.left_stick_y > 0.5) {
+			robot.wobbleGoalArm.giveArmPower(-0.6);
+		} else if(this.gamepad2.left_stick_y < -0.5) {
+			robot.wobbleGoalArm.giveArmPower(0.6);
+		} else {
+			robot.wobbleGoalArm.giveArmPower(0);
 		}
 
 		// if (this.gamepad2.dpad_left) {

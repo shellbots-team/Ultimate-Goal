@@ -55,9 +55,6 @@ public class GrabberAutonomous extends BaseAutonomous {
 
 		robot.dropWobble();
 
-		robot.grabber.baseRightGrabber.lower();
-		robot.grabber.altRightGrabber.raise();
-
 		sleep(2000);
 
 		if(ringPosition == RingPosition.NONE) {
@@ -73,17 +70,10 @@ public class GrabberAutonomous extends BaseAutonomous {
 
 		robot.resetWobble();
 
-		robot.grabber.baseRightGrabber.raise();
-		robot.grabber.altRightGrabber.lower();
-
 		sleep(2000);
 
 		logger.statusLog(step++, "Stopping");
 		robot.stopAllMotors();
-		int XValue = robot.drivetrain.frontLeft.getCurrentPosition();
-		int YValue = robot.drivetrain.frontRight.getCurrentPosition();
-		SavedData.save(XValue, YValue);
-		logger.completeLog("Positions X/Y", XValue + "/" + YValue);
 	}
 
 }

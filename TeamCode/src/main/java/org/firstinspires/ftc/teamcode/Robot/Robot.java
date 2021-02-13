@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -84,8 +85,8 @@ public class Robot {
 	private Logger logger = null;
 	public Drivetrain drivetrain = null;
 	public Arm arm = null;
+	public WobbleGoalArm wobbleGoalArm = null;
 	public CameraVision cameraVision = null;
-	public Grabber grabber = null;
 	public TouchSensor minTouch = null;
 	public TouchSensor maxTouch = null;
 	public DistanceSensor leftDistanceSensor = null;
@@ -112,8 +113,8 @@ public class Robot {
 		logger = new Logger(telemetry);
 		drivetrain = new Drivetrain(opmode);
 		arm = new Arm(opmode);
+		wobbleGoalArm = new WobbleGoalArm(opmode);
 		cameraVision = new CameraVision(hardwareMap);
-		grabber = new Grabber(opmode);
 
 		drivetrain.init(
 				telemetry,
@@ -128,16 +129,13 @@ public class Robot {
 				this.hardwareMap.get(DcMotor.class, "leftArm"),
 				this.hardwareMap.get(DcMotor.class, "rightArm"),
 				this.hardwareMap.get(DcMotor.class, "extendArm"),
-				this.hardwareMap.get(CRServo.class, "hand"),
-				this.hardwareMap.get(DcMotor.class, "elevateArm")
+				this.hardwareMap.get(CRServo.class, "hand")
 		);
 
-		grabber.init(
+		wobbleGoalArm.init(
 				telemetry,
-				this.hardwareMap.get(CRServo.class, "baseRightServo"),
-				this.hardwareMap.get(CRServo.class, "altRightServo"),
-				this.hardwareMap.get(CRServo.class, "baseLeftServo"),
-				this.hardwareMap.get(CRServo.class, "altLeftServo")
+				this.hardwareMap.get(DcMotor.class, "base"),
+				this.hardwareMap.get(Servo.class, "claw")
 		);
 
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");

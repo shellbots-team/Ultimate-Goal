@@ -15,7 +15,6 @@ import java.util.Locale;
 
 public class Arm extends RobotComponent {
 
-	public DcMotor elevateArm = null;
 	public DcMotor leftArm = null;
 	public DcMotor rightArm = null;
 	private DcMotor extendArm = null;
@@ -29,7 +28,7 @@ public class Arm extends RobotComponent {
 		super(opmode);
 	}
 
-	void init(Telemetry telemetry, DcMotor leftArm, DcMotor rightArm, DcMotor extendArm, CRServo rightHand, DcMotor elevateArm) {
+	void init(Telemetry telemetry, DcMotor leftArm, DcMotor rightArm, DcMotor extendArm, CRServo rightHand) {
 		logger = new Logger(telemetry);
 
 		this.rightHand = rightHand;
@@ -37,7 +36,6 @@ public class Arm extends RobotComponent {
 		this.leftArm = leftArm;
 		this.rightArm = rightArm;
 		this.extendArm = extendArm;
-		this.elevateArm = elevateArm;
 
 		leftArm.setDirection(DcMotor.Direction.FORWARD);
 		rightArm.setDirection(DcMotor.Direction.REVERSE);
@@ -45,7 +43,6 @@ public class Arm extends RobotComponent {
 
 		leftArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		extendArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		elevateArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 		leftArm.setTargetPosition(0);
 		rightArm.setTargetPosition(0);
@@ -63,8 +60,6 @@ public class Arm extends RobotComponent {
 		logger.numberLog("Rightarm", rightArm.getPower());
 		logger.numberLog("Extendarm", extendArm.getPower());
 	}
-
-	public void elevateWithPower(double power) {elevateArm.setPower(power);}
 
 	public void extendWithPower(double power) {extendArm.setPower(power);}
 
