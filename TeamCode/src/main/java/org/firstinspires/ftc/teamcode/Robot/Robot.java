@@ -132,11 +132,11 @@ public class Robot {
 				this.hardwareMap.get(CRServo.class, "hand")
 		);
 
-		wobbleGoalArm.init(
-				telemetry,
-				this.hardwareMap.get(DcMotor.class, "base"),
-				this.hardwareMap.get(Servo.class, "claw")
-		);
+//		wobbleGoalArm.init(
+//				telemetry,
+//				this.hardwareMap.get(DcMotor.class, "base"),
+//				this.hardwareMap.get(Servo.class, "claw")
+//		);
 
 		leftGrip = this.hardwareMap.get(CRServo.class, "leftGrip");
 		rightGrip = this.hardwareMap.get(CRServo.class, "rightGrip");
