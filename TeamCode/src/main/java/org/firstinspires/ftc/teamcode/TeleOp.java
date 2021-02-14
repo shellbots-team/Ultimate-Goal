@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Robot.Grabber;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 
 
@@ -52,8 +48,13 @@ public class TeleOp extends OpMode {
 
 	@Override
 	public void loop() {
+
+		// Player 1
+
+		// Move according to player 1's joysticks
 		singleJoystickDrive();
 
+		// Change driving speed
 		if (this.gamepad1.right_trigger > 0.5) {
 			speed = 1.0;
 		} else if (this.gamepad1.left_trigger > 0.5) {
@@ -61,7 +62,39 @@ public class TeleOp extends OpMode {
 		} else if (this.gamepad1.right_bumper) {
 			speed = 0.25;
 		}
+/*
+		// Player 2
 
+		// Shoot power shot
+		if (gamepad2.dpad_up) {
+			robot.elevator.close();
+		} else if (gamepad2.dpad_down) {
+			robot.elevator.open();
+		}
+
+		// Start and stop banana shooter
+		if (gamepad2.a) {
+			robot.bananaShooter.setPower(0.5);
+		} else {
+			robot.bananaShooter.setPower(0);
+		}
+
+		// Grab and release wobble goal
+		if (gamepad2.b) {
+			robot.wobbleGoalArm.grabWobbleGoal();
+		} else if(gamepad2.x) {
+			robot.wobbleGoalArm.releaseWobbleGoal();
+		}
+
+		// Raise and lower wobble goal grabber
+		if (gamepad2.left_stick_y > 0.5) {
+			robot.wobbleGoalArm.giveArmPower(-0.6);
+		} else if (gamepad2.left_stick_y < -0.5) {
+			robot.wobbleGoalArm.giveArmPower(0.6);
+		} else {
+			robot.wobbleGoalArm.giveArmPower(0);
+		}
+*/
 	}
 
 	/**
@@ -69,7 +102,7 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void stop() {
-		//robot.stopAllMotors();
+		robot.stopAllMotors();
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}

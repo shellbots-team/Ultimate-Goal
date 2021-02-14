@@ -41,10 +41,10 @@ public class Drivetrain extends RobotComponent {
 		backRight.setTargetPosition(0);
 
 		// Set forward/reverse to account for position on the robot
-		frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-		backLeft.setDirection(DcMotor.Direction.REVERSE);
-		frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-		backRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+		frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+		backLeft.setDirection(DcMotor.Direction.FORWARD);
+		frontRight.setDirection(DcMotor.Direction.REVERSE);
+		backRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
 		// Set motors to actively break (resist movement) is they are given 0 power
 		frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);// Set to FORWARD if using AndyMark motors

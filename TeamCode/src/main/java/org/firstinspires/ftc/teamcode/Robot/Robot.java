@@ -29,12 +29,15 @@
 
 package org.firstinspires.ftc.teamcode.Robot;
 
+import android.graphics.Camera;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -44,13 +47,16 @@ import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.I
 
 public class Robot {
 
-	private Logger logger = null;
-	public Drivetrain drivetrain = null;
-
 	private HardwareMap hardwareMap = null;
 	private Telemetry telemetry = null;
 	private OpMode opmode = null;
+	private Logger logger = null;
 
+	public Drivetrain drivetrain = null;
+	public BananaShooter bananaShooter = null;
+	public WobbleGoalArm wobbleGoalArm = null;
+	public Elevator elevator = null;
+	public CameraVision cameraVision = null;
 
 	/* Constructor */
 	public Robot() { }
@@ -68,17 +74,40 @@ public class Robot {
 		this.telemetry = telemetry;
 		this.opmode = opmode;
 
-		// Initialize specific robot parts
+		// Create specific robot parts
 		logger = new Logger(telemetry);
 		drivetrain = new Drivetrain(opmode);
+		bananaShooter = new BananaShooter(opmode);
+		wobbleGoalArm = new WobbleGoalArm(opmode);
+		elevator = new Elevator(opmode);
+		cameraVision = new CameraVision(hardwareMap);
 
+		// Initialize specific robot parts
 		drivetrain.init(
 				telemetry,
 				this.hardwareMap.get(DcMotor.class, "leftFront"),
 				this.hardwareMap.get(DcMotor.class, "rightFront"),
 				this.hardwareMap.get(DcMotor.class, "leftRear"),
 				this.hardwareMap.get(DcMotor.class, "rightRear")
+		);/*
+
+		bananaShooter.init(
+				telemetry,
+				this.hardwareMap.get(DcMotor.class, "bananaLeft"),
+				this.hardwareMap.get(DcMotor.class, "bananaRight")
 		);
+
+		wobbleGoalArm.init(
+				telemetry,
+				this.hardwareMap.get(DcMotor.class, "wobbleBase"),
+				this.hardwareMap.get(Servo.class, "wobbleClaw")
+		);
+
+		elevator.init(
+				telemetry,
+				this.hardwareMap.get(CRServo.class, "elevatorLeft"),
+				this.hardwareMap.get(CRServo.class, "elevatorRight")
+		);*/
 
 	}
 
