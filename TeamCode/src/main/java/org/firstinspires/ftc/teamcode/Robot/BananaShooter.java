@@ -13,6 +13,8 @@ public class BananaShooter extends RobotComponent {
 	private DcMotor leftMotor = null;
 	private DcMotor rightMotor = null;
 
+	private static double RUN_SPEED = 0.45;
+
 	BananaShooter(OpMode opMode) { super(opMode); }
 
 	public void init(Telemetry telemetry, DcMotor leftMotor, DcMotor rightMotor) {
@@ -21,12 +23,12 @@ public class BananaShooter extends RobotComponent {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 
-		this.leftMotor.setDirection(DcMotor.Direction.REVERSE);
+		this.rightMotor.setDirection(DcMotor.Direction.REVERSE);
 	}
 
-	public void setPower(double power) {
-		leftMotor.setPower(power);
-		rightMotor.setPower(power);
+	public void run(double power) {
+		leftMotor.setPower(RUN_SPEED * power);
+		rightMotor.setPower(RUN_SPEED * power);
 	}
 
 	@Override

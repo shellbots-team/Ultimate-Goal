@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Logger;
+import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.INCH;
 
@@ -56,6 +57,8 @@ public class Robot {
 	public BananaShooter bananaShooter = null;
 	public WobbleGoalArm wobbleGoalArm = null;
 	public Elevator elevator = null;
+	public WobbleHand wobbleHand = null;
+	public RingStager ringStager = null;
 	public CameraVision cameraVision = null;
 
 	/* Constructor */
@@ -80,6 +83,8 @@ public class Robot {
 		bananaShooter = new BananaShooter(opmode);
 		wobbleGoalArm = new WobbleGoalArm(opmode);
 		elevator = new Elevator(opmode);
+		wobbleHand = new WobbleHand(opmode);
+		ringStager = new RingStager(opmode);
 		cameraVision = new CameraVision(hardwareMap);
 
 		// Initialize specific robot parts
@@ -89,7 +94,7 @@ public class Robot {
 				this.hardwareMap.get(DcMotor.class, "rightFront"),
 				this.hardwareMap.get(DcMotor.class, "leftRear"),
 				this.hardwareMap.get(DcMotor.class, "rightRear")
-		);/*
+		);
 
 		bananaShooter.init(
 				telemetry,
@@ -105,9 +110,18 @@ public class Robot {
 
 		elevator.init(
 				telemetry,
-				this.hardwareMap.get(CRServo.class, "elevatorLeft"),
-				this.hardwareMap.get(CRServo.class, "elevatorRight")
-		);*/
+				this.hardwareMap.get(Servo.class, "elevatorLeft"),
+				this.hardwareMap.get(Servo.class, "elevatorRight")
+		);
+
+		wobbleHand.init(
+				telemetry,
+				this.hardwareMap.get(Servo.class, "wobbleHand")
+		);
+
+		ringStager.init(
+				this.hardwareMap.get(Servo.class, "ringStager")
+		);
 
 	}
 

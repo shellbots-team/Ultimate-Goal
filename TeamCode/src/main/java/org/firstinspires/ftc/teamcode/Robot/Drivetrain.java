@@ -59,7 +59,7 @@ public class Drivetrain extends RobotComponent {
 	}
 
 	@Override
-	void logTeleOpData() {
+	public void logTeleOpData() {
 		logger.numberLog("Frontleft", frontLeft.getPower());
 		logger.numberLog("Frontleft", frontLeft.getCurrentPosition());
 		logger.numberLog("Frontright", frontRight.getPower());
@@ -80,26 +80,19 @@ public class Drivetrain extends RobotComponent {
 	public void turnDegrees(double degrees, boolean goClockwise, double speed) {
 		int inchTurn = (int) (degrees / 10.95);
 		if (goClockwise) {
-			runDistance(inchTurn, -inchTurn);
+			runIndDistance(inchTurn, -inchTurn, speed);
 		} else {
-			runDistance(-inchTurn, inchTurn);
+			runIndDistance(-inchTurn, inchTurn, speed);
 		}
 
 	}
 
-	public void turnDegrees(double degrees, boolean goClockwise, double speed, double maxSeconds) {
-		int inchTurn = (int) (degrees / 10.95);
-		if (goClockwise) {
-			runDistance(inchTurn, -inchTurn, speed, maxSeconds);
-		} else {
-			runDistance(-inchTurn, inchTurn, speed, maxSeconds);
-		}
-
+	public void runIndDistance(double leftInches, double rightInches, double speed) {
+		runDistance(leftInches, rightInches, 999, speed);
 	}
 
-	// Run a set number of inches on the left/right with default speed and no max time limit
-	public void runDistance(double leftInches, double rightInches) {
-		runDistance(leftInches, rightInches, 999, defaultSpeed);
+	public void runDistance(double inches, double speed) {
+		runDistance(inches, inches, 999, speed);
 	}
 
 	// Run a set number of inches on the left/right with default speed and a max time limit in seconds

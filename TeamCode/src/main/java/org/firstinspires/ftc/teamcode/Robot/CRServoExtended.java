@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class CRServoExtended {
 
-	private CRServo servo = null;
+	private Servo servo = null;
 	private double closedPosition = 0;
 	private double openPosition = 0;
 
-	public CRServoExtended(CRServo servo) {
+	public CRServoExtended(Servo servo) {
 		this.servo = servo;
 	}
 

@@ -28,7 +28,7 @@ public class CameraVision {
 			{
 				// 1280x720, 960x720
 				// webcam.startStreaming(1280,720, OpenCvCameraRotation.SIDEWAYS_LEFT);
-				webcam.startStreaming(960, 720, OpenCvCameraRotation.SIDEWAYS_LEFT);
+				webcam.startStreaming(960, 720, OpenCvCameraRotation.SIDEWAYS_RIGHT);
 			}
 		});
 	}

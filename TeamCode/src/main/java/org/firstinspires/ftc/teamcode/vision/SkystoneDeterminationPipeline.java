@@ -65,10 +65,10 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 	final int ONE_RING_THRESHOLD = 130;
 	 */
 
-	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(455, 140);
+	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(115, 590);
 
-	static final int REGION_WIDTH = 160;
-	static final int REGION_HEIGHT = 105;
+	static final int REGION_WIDTH = 180;
+	static final int REGION_HEIGHT = 140;
 
 	final int FOUR_RING_THRESHOLD = 142;
 	final int ONE_RING_THRESHOLD = 130;

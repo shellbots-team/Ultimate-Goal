@@ -15,6 +15,8 @@ public class TeleOp extends OpMode {
 	private Robot robot = new Robot();
 	private Logger logger = null;
 	private double speed = 0.5;
+	private double shootSpeed = 0.97;
+	private int count = 0;
 
 	/**
 	 * Run once after INIT is pushed
@@ -59,11 +61,33 @@ public class TeleOp extends OpMode {
 			speed = 1.0;
 		} else if (this.gamepad1.left_trigger > 0.5) {
 			speed = 0.5;
-		} else if (this.gamepad1.right_bumper) {
-			speed = 0.25;
 		}
-/*
+
+		if (gamepad1.right_bumper) {
+			robot.wobbleHand.release();
+		} else if (gamepad1.left_bumper) {
+			robot.wobbleHand.grab();
+		}
+
 		// Player 2
+
+		if(gamepad2.a) {
+			count++;
+			if(count % 100 == 0) {
+				shootSpeed -= 0.01;
+				if(shootSpeed < 0) { shootSpeed = 0; }
+			}
+		} else if(gamepad2.y) {
+			count++;
+			if(count % 100 == 0) {
+				shootSpeed += 0.01;
+			}
+			if(shootSpeed > 1) { shootSpeed = 1; }
+		} else {
+			count = 0;
+		}
+
+//		logger.completeLog("Shoot Speed", String.valueOf(shootSpeed));
 
 		// Shoot power shot
 		if (gamepad2.dpad_up) {
@@ -73,18 +97,25 @@ public class TeleOp extends OpMode {
 		}
 
 		// Start and stop banana shooter
-		if (gamepad2.a) {
-			robot.bananaShooter.setPower(0.5);
+		if (gamepad2.b) {
+			robot.bananaShooter.run(shootSpeed);
 		} else {
-			robot.bananaShooter.setPower(0);
+			robot.bananaShooter.stopAllMotors();
+		}
+
+		// Stage rings
+		if (gamepad2.left_bumper) {
+			robot.ringStager.grab();
+		} else if (gamepad2.right_bumper){
+			robot.ringStager.drop();
 		}
 
 		// Grab and release wobble goal
-		if (gamepad2.b) {
-			robot.wobbleGoalArm.grabWobbleGoal();
-		} else if(gamepad2.x) {
-			robot.wobbleGoalArm.releaseWobbleGoal();
-		}
+//		if (gamepad2.b) {
+//			robot.wobbleGoalArm.grabWobbleGoal();
+//		} else if(gamepad2.x) {
+//			robot.wobbleGoalArm.releaseWobbleGoal();
+//		}
 
 		// Raise and lower wobble goal grabber
 		if (gamepad2.left_stick_y > 0.5) {
@@ -94,7 +125,9 @@ public class TeleOp extends OpMode {
 		} else {
 			robot.wobbleGoalArm.giveArmPower(0);
 		}
-*/
+
+		robot.drivetrain.logTeleOpData();
+
 	}
 
 	/**

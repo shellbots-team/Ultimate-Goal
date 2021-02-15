@@ -15,14 +15,14 @@ public class Elevator extends RobotComponent {
 
 	Elevator(OpMode opMode) { super(opMode); }
 
-	public void init(Telemetry telemetry, CRServo leftServo, CRServo rightServo) {
+	public void init(Telemetry telemetry, Servo leftServo, Servo rightServo) {
 		logger = new Logger(telemetry);
 
 		this.leftServo = new CRServoExtended(leftServo);
 		this.rightServo = new CRServoExtended(rightServo);
 
-		this.leftServo.definePositions(0, 1);
-		this.rightServo.definePositions(0, 1);
+		this.leftServo.definePositions(0.95, 0.7);
+		this.rightServo.definePositions(0, 0.25);
 	}
 
 	public void close() {
@@ -32,7 +32,7 @@ public class Elevator extends RobotComponent {
 
 	public void open() {
 		leftServo.open();
-		leftServo.open();
+		rightServo.open();
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class Logger {
 	}
 
 	public void completeLog(String caption, String value) {
-		Log.d("14736:" + caption, value);
+		Log.e("14736:" + caption, value);
 		telemetry.addData(caption, value);
 	}
 
