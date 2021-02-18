@@ -140,11 +140,28 @@ public class Drivetrain extends RobotComponent {
 		logger.completeLog("Path1", String.format(Locale.US,
 				"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
 
+		double frTotal = frontRight.getTargetPosition() - frontRight.getCurrentPosition();
+		double brTotal = backRight.getTargetPosition() - backRight.getCurrentPosition();
+		double flTotal = frontLeft.getTargetPosition() - frontLeft.getCurrentPosition();
+		double blTotal = backLeft.getTargetPosition() - backLeft.getCurrentPosition();
 		setAllPowers(maxSpeed);
 		// While game is still going, maxtime has not been reached, and none of the motors have reached their position
 		while (opModeIsActive() && (runtime.seconds() < maxSeconds) &&
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
 				(frontRight.isBusy() && backRight.isBusy())) {
+
+			double flc = frontLeft.getCurrentPosition();
+			double flt = frontLeft.getTargetPosition();
+			frontLeft.setPower( Math.abs( Math.sin(Math.PI/3*((flt-flc)/flTotal)+Math.PI/3) ) );
+			double frc = frontRight.getCurrentPosition();
+			double frt = frontRight.getTargetPosition();
+			frontRight.setPower( Math.abs( Math.sin(Math.PI/3*((frt-frc)/frTotal)+Math.PI/3) ) );
+			double blc = backLeft.getCurrentPosition();
+			double blt = backLeft.getTargetPosition();
+			backLeft.setPower( Math.abs( Math.sin(Math.PI/3*((blt-blc)/blTotal)+Math.PI/3) ) );
+			double brc = backRight.getCurrentPosition();
+			double brt = backRight.getTargetPosition();
+			backRight.setPower( Math.abs( Math.sin(Math.PI/3*((brt-brc)/brTotal)+Math.PI/3) ) );
 
 			logger.addData("Path1", String.format(Locale.US,
 					"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
