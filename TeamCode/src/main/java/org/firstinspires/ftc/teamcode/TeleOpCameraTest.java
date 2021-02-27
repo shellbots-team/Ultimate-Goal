@@ -18,7 +18,7 @@ public class TeleOpCameraTest extends OpMode {
 
 	@Override
 	public void init() {
-		robot.init(hardwareMap, telemetry, this);
+		robot.init(hardwareMap, telemetry, this, false);
 		logger = new Logger(telemetry);
 		this.msStuckDetectStop = 60000;
 

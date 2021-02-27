@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.Robot;
 
 import android.graphics.Camera;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -60,6 +61,7 @@ public class Robot {
 	public WobbleHand wobbleHand = null;
 	public RingStager ringStager = null;
 	public CameraVision cameraVision = null;
+	public IMU imu = null;
 
 	/* Constructor */
 	public Robot() { }
@@ -71,7 +73,7 @@ public class Robot {
 	 * @param telemetry For outputting to the phones console
 	 * @param opmode To allow the robot to know if it is running or not
 	 */
-	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode) {
+	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode, boolean isAuto) {
 		// Setup basic overall variables
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
@@ -122,6 +124,14 @@ public class Robot {
 		ringStager.init(
 				this.hardwareMap.get(Servo.class, "ringStager")
 		);
+
+		if(isAuto) {
+			imu = new IMU(opmode);
+			imu.init(
+					telemetry,
+					this.hardwareMap.get(BNO055IMU.class, "imu")
+			);
+		}
 
 	}
 

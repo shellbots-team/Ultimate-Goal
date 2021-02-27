@@ -140,16 +140,21 @@ public class Drivetrain extends RobotComponent {
 		logger.completeLog("Path1", String.format(Locale.US,
 				"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
 
-		double frTotal = frontRight.getTargetPosition() - frontRight.getCurrentPosition();
-		double brTotal = backRight.getTargetPosition() - backRight.getCurrentPosition();
-		double flTotal = frontLeft.getTargetPosition() - frontLeft.getCurrentPosition();
-		double blTotal = backLeft.getTargetPosition() - backLeft.getCurrentPosition();
+		double frTotal = Math.abs( frontRight.getTargetPosition() - frontRight.getCurrentPosition() );
+		if(frTotal == 0) { frTotal = 1; }
+		double brTotal = Math.abs( backRight.getTargetPosition() - backRight.getCurrentPosition() );
+		if(brTotal == 0) { brTotal = 1; }
+		double flTotal = Math.abs( frontLeft.getTargetPosition() - frontLeft.getCurrentPosition() );
+		if(flTotal == 0) { flTotal = 1; }
+		double blTotal = Math.abs( backLeft.getTargetPosition() - backLeft.getCurrentPosition() );
+		if(blTotal == 0) { blTotal = 1; }
 		setAllPowers(maxSpeed);
 		// While game is still going, maxtime has not been reached, and none of the motors have reached their position
 		while (opModeIsActive() && (runtime.seconds() < maxSeconds) &&
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
 				(frontRight.isBusy() && backRight.isBusy())) {
 
+			/*
 			double flc = frontLeft.getCurrentPosition();
 			double flt = frontLeft.getTargetPosition();
 			frontLeft.setPower( Math.abs( Math.sin(Math.PI/3*((flt-flc)/flTotal)+Math.PI/3) ) );
@@ -162,6 +167,11 @@ public class Drivetrain extends RobotComponent {
 			double brc = backRight.getCurrentPosition();
 			double brt = backRight.getTargetPosition();
 			backRight.setPower( Math.abs( Math.sin(Math.PI/3*((brt-brc)/brTotal)+Math.PI/3) ) );
+			 */
+			normalizePower(maxSpeed, frTotal, frontRight);
+			normalizePower(maxSpeed, flTotal, frontLeft);
+			normalizePower(maxSpeed, brTotal, backRight);
+			normalizePower(maxSpeed, blTotal, backLeft);
 
 			logger.addData("Path1", String.format(Locale.US,
 					"Running to FL:%7d, BL:%7d, FR:%7d, BR:%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget));
@@ -190,6 +200,14 @@ public class Drivetrain extends RobotComponent {
 
 		// Stop all motion
 		setAllPowers(0);
+	}
+
+	private void normalizePower(double speed, double totalDistance, DcMotor motor) {
+		double x = Math.abs( motor.getTargetPosition() - motor.getCurrentPosition() ) / totalDistance;
+		//if( x < 0.15 || x > 0.85 ) { motor.setPower(speed * 0.75); }
+		//else { motor.setPower(speed); }
+		//motor.setPower( speed * Math.abs( Math.sin( Math.PI / 3 * x + Math.PI/3) ) );
+		//motor.setPower( speed * Math.abs( Math.sin( ( 0.5 * Math.PI * x ) + ( Math.PI / 3.75 ) ) ) );
 	}
 
 	/**

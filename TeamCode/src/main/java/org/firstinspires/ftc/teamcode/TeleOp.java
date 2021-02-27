@@ -17,13 +17,17 @@ public class TeleOp extends OpMode {
 	private double speed = 0.5;
 	private double shootSpeed = 0.97;
 	private int count = 0;
+	private boolean last_g2_x = false;
+	private boolean last_g2_b = false;
+	private boolean wobbleOpen = false;
+	private boolean grabOpen = false;
 
 	/**
 	 * Run once after INIT is pushed
 	 */
 	@Override
 	public void init() {
-		robot.init(hardwareMap, telemetry, this);
+		robot.init(hardwareMap, telemetry, this, false);
 		logger = new Logger(telemetry);
 
 		// Step 0 - Initialized
@@ -63,65 +67,60 @@ public class TeleOp extends OpMode {
 			speed = 0.5;
 		}
 
-		if (gamepad1.right_bumper) {
-			robot.wobbleHand.release();
-		} else if (gamepad1.left_bumper) {
-			robot.wobbleHand.grab();
-		}
-
 		// Player 2
 
-		if(gamepad2.a) {
-			count++;
-			if(count % 100 == 0) {
-				shootSpeed -= 0.01;
-				if(shootSpeed < 0) { shootSpeed = 0; }
-			}
-		} else if(gamepad2.y) {
-			count++;
-			if(count % 100 == 0) {
-				shootSpeed += 0.01;
-			}
-			if(shootSpeed > 1) { shootSpeed = 1; }
-		} else {
-			count = 0;
-		}
+		// if(gamepad2.a) {
+		// 	count++;
+		// 	if(count % 100 == 0) {
+		// 		shootSpeed -= 0.01;
+		// 		if(shootSpeed < 0) { shootSpeed = 0; }
+		// 	}
+		// } else if(gamepad2.y) {
+		// 	count++;
+		// 	if(count % 100 == 0) {
+		// 		shootSpeed += 0.01;
+		// 	}
+		// 	if(shootSpeed > 1) { shootSpeed = 1; }
+		// } else {
+		// 	count = 0;
+		// }
 
 //		logger.completeLog("Shoot Speed", String.valueOf(shootSpeed));
 
-		// Shoot power shot
-		if (gamepad2.dpad_up) {
+		if(gamepad2.left_trigger > 0.5) {
+			robot.bananaShooter.run(0.88);
+		} else {
+			robot.bananaShooter.run(0);
+		}
+
+		if(gamepad2.right_trigger > 0.5) {
 			robot.elevator.close();
-		} else if (gamepad2.dpad_down) {
+		} else {
 			robot.elevator.open();
 		}
 
-		// Start and stop banana shooter
-		if (gamepad2.b) {
-			robot.bananaShooter.run(shootSpeed);
-		} else {
-			robot.bananaShooter.stopAllMotors();
+		if(!last_g2_x && gamepad2.x) {
+			if(wobbleOpen) {
+				robot.wobbleGoalArm.releaseWobbleGoal();
+			} else {
+				robot.wobbleGoalArm.grabWobbleGoal();
+			}
+			wobbleOpen = !wobbleOpen;
 		}
+		last_g2_x = gamepad2.x;
 
-		// Stage rings
-		if (gamepad2.left_bumper) {
-			robot.ringStager.grab();
-		} else if (gamepad2.right_bumper){
-			robot.ringStager.drop();
+		if(!last_g2_b && gamepad2.b) {
+			if(grabOpen) {
+				robot.ringStager.grab();
+			} else {
+				robot.ringStager.drop();
+			}
+			grabOpen = !grabOpen;
 		}
+		last_g2_b = gamepad2.b;
 
-		// Grab and release wobble goal
-//		if (gamepad2.b) {
-//			robot.wobbleGoalArm.grabWobbleGoal();
-//		} else if(gamepad2.x) {
-//			robot.wobbleGoalArm.releaseWobbleGoal();
-//		}
-
-		// Raise and lower wobble goal grabber
-		if (gamepad2.left_stick_y > 0.5) {
-			robot.wobbleGoalArm.giveArmPower(-0.6);
-		} else if (gamepad2.left_stick_y < -0.5) {
-			robot.wobbleGoalArm.giveArmPower(0.6);
+		if(Math.abs(gamepad2.left_stick_y) > 0.05) {
+			robot.wobbleGoalArm.giveArmPower(gamepad2.left_stick_y / 0.8);
 		} else {
 			robot.wobbleGoalArm.giveArmPower(0);
 		}
