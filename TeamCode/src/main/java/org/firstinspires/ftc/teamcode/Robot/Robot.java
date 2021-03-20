@@ -45,6 +45,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Logger;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 
+import java.util.Optional;
+
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.INCH;
 
 public class Robot {
@@ -73,7 +75,8 @@ public class Robot {
 	 * @param telemetry For outputting to the phones console
 	 * @param opmode To allow the robot to know if it is running or not
 	 */
-	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode, boolean isAuto) {
+	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode, boolean isAuto, boolean usesRoadRunner) {
+		// TODO: Make usesRoadRunner boolean optional (API level 24 min instead of curr level 23)
 		// Setup basic overall variables
 		this.hardwareMap = hardwareMap;
 		this.telemetry = telemetry;
@@ -90,18 +93,19 @@ public class Robot {
 		cameraVision = new CameraVision(hardwareMap);
 
 		// Initialize specific robot parts
-		drivetrain.init(
-				telemetry,
-				this.hardwareMap.get(DcMotor.class, "leftFront"),
-				this.hardwareMap.get(DcMotor.class, "rightFront"),
-				this.hardwareMap.get(DcMotor.class, "leftRear"),
-				this.hardwareMap.get(DcMotor.class, "rightRear")
-		);
+		if(!usesRoadRunner) {
+			drivetrain.init(
+					telemetry,
+					this.hardwareMap.get(DcMotor.class, "leftFront"),
+					this.hardwareMap.get(DcMotor.class, "rightFront"),
+					this.hardwareMap.get(DcMotor.class, "leftRear"),
+					this.hardwareMap.get(DcMotor.class, "rightRear")
+			);
+		}
 
 		bananaShooter.init(
 				telemetry,
-				this.hardwareMap.get(DcMotor.class, "bananaLeft"),
-				this.hardwareMap.get(DcMotor.class, "bananaRight")
+				this.hardwareMap.get(DcMotor.class, "banana")
 		);
 
 		wobbleGoalArm.init(

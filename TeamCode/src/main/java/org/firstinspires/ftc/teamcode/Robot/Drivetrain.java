@@ -202,6 +202,10 @@ public class Drivetrain extends RobotComponent {
 		setAllPowers(0);
 	}
 
+	public void runWithoutEncoders() {
+		setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, frontLeft, frontRight, backLeft, backRight);
+	}
+
 	private void normalizePower(double speed, double totalDistance, DcMotor motor) {
 		double x = Math.abs( motor.getTargetPosition() - motor.getCurrentPosition() ) / totalDistance;
 		//if( x < 0.15 || x > 0.85 ) { motor.setPower(speed * 0.75); }

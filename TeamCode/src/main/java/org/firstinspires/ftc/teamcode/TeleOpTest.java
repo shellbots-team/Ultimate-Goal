@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
  * Created by shell on 09/10/2019.
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "Manual Mode")
-public class TeleOp extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "Manual Mode Test")
+public class TeleOpTest extends OpMode {
 
 	private static final boolean TUNING = true;
 	private Robot robot = new Robot();
@@ -22,6 +22,7 @@ public class TeleOp extends OpMode {
 	private boolean last_g2_b = false;
 	private boolean wobbleOpen = false;
 	private boolean grabOpen = false;
+	private boolean frontWheel = true;
 
 	/**
 	 * Run once after INIT is pushed
@@ -69,68 +70,10 @@ public class TeleOp extends OpMode {
 			speed = 0.5;
 		}
 
-		// Player 2
-
-		if(TUNING) {
-			if (gamepad2.a) {
-				if (count % 100 == 0) {
-					shootSpeed -= 0.01;
-					if (shootSpeed < 0) {
-						shootSpeed = 0;
-					}
-				}
-				count++;
-			} else if (gamepad2.y) {
-				if (count % 100 == 0) {
-					shootSpeed += 0.01;
-				}
-				if (shootSpeed > 1) {
-					shootSpeed = 1;
-				}
-				count++;
-			} else {
-				count = 0;
-			}
-		}
-
-		logger.completeLog("Shoot Speed", String.valueOf(shootSpeed));
-
-		if(gamepad2.left_trigger > 0.5) {
-			robot.bananaShooter.run(shootSpeed);
-		} else {
-			robot.bananaShooter.run(0);
-		}
-
-		if(gamepad2.right_trigger > 0.5) {
-			robot.elevator.close();
-		} else {
-			robot.elevator.open();
-		}
-
-		if(!last_g2_x && gamepad2.x) {
-			if(wobbleOpen) {
-				robot.wobbleGoalArm.releaseWobbleGoal();
-			} else {
-				robot.wobbleGoalArm.grabWobbleGoal();
-			}
-			wobbleOpen = !wobbleOpen;
-		}
-		last_g2_x = gamepad2.x;
-
-		if(!last_g2_b && gamepad2.b) {
-			if(grabOpen) {
-				robot.ringStager.grab();
-			} else {
-				robot.ringStager.drop();
-			}
-			grabOpen = !grabOpen;
-		}
-		last_g2_b = gamepad2.b;
-
-		if(Math.abs(gamepad2.left_stick_y) > 0.05) {
-			robot.wobbleGoalArm.giveArmPower(gamepad2.left_stick_y / 0.8);
-		} else {
-			robot.wobbleGoalArm.giveArmPower(0);
+		if(this.gamepad1.y) {
+			frontWheel = true;
+		} else if(this.gamepad1.a) {
+			frontWheel = false;
 		}
 
 	}
@@ -149,12 +92,20 @@ public class TeleOp extends OpMode {
 		double leftX = this.gamepad1.left_stick_x;
 		double leftY = this.gamepad1.left_stick_y;
 		double rightX = this.gamepad1.right_stick_x;
+		double rightY = this.gamepad1.right_stick_y;
 
 		double[] motorPowers = new double[4];
-		motorPowers[0] = (leftY-leftX-rightX);// -+
-		motorPowers[1] = (leftY+leftX+rightX);// +-
-		motorPowers[2] = (leftY+leftX-rightX);// ++
-		motorPowers[3] = (leftY-leftX+rightX);// --
+		if(frontWheel) {
+			motorPowers[0] = leftY;// -+
+			motorPowers[1] = rightY; // (leftY+leftX+rightX);// +-
+			motorPowers[2] = 0; // (leftY+leftX-rightX);// ++
+			motorPowers[3] = 0; // (leftY-leftX+rightX);// --
+		} else {
+			motorPowers[0] = 0;// -+
+			motorPowers[1] = 0; // (leftY+leftX+rightX);// +-
+			motorPowers[2] = leftY; // (leftY+leftX-rightX);// ++
+			motorPowers[3] = rightY; // (leftY-leftX+rightX);// --
+		}
 
 		double max = Math.abs(getLargestAbsVal(motorPowers));
 		if(max < 1) { max = 1; }
