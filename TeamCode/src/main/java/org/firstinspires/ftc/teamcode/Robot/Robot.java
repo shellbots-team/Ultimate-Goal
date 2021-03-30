@@ -29,25 +29,17 @@
 
 package org.firstinspires.ftc.teamcode.Robot;
 
-import android.graphics.Camera;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Logger;
-import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
-
-import java.util.Optional;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.INCH;
 
 public class Robot {
 
@@ -57,13 +49,11 @@ public class Robot {
 	private Logger logger = null;
 
 	public Drivetrain drivetrain = null;
-	public BananaShooter bananaShooter = null;
+	public Launcher launcher = null;
 	public WobbleGoalArm wobbleGoalArm = null;
-	public Elevator elevator = null;
+	public Intake intake = null;
 	public WobbleHand wobbleHand = null;
-	public RingStager ringStager = null;
 	public CameraVision cameraVision = null;
-	public IMU imu = null;
 
 	/* Constructor */
 	public Robot() { }
@@ -75,7 +65,7 @@ public class Robot {
 	 * @param telemetry For outputting to the phones console
 	 * @param opmode To allow the robot to know if it is running or not
 	 */
-	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode, boolean isAuto, boolean usesRoadRunner) {
+	public void init(HardwareMap hardwareMap, Telemetry telemetry, OpMode opmode, boolean usesRoadRunner) {
 		// TODO: Make usesRoadRunner boolean optional (API level 24 min instead of curr level 23)
 		// Setup basic overall variables
 		this.hardwareMap = hardwareMap;
@@ -85,11 +75,10 @@ public class Robot {
 		// Create specific robot parts
 		logger = new Logger(telemetry);
 		drivetrain = new Drivetrain(opmode);
-		bananaShooter = new BananaShooter(opmode);
+		launcher = new Launcher(opmode);
+		intake = new Intake(opmode);
 		wobbleGoalArm = new WobbleGoalArm(opmode);
-		elevator = new Elevator(opmode);
 		wobbleHand = new WobbleHand(opmode);
-		ringStager = new RingStager(opmode);
 		cameraVision = new CameraVision(hardwareMap);
 
 		// Initialize specific robot parts
@@ -103,9 +92,17 @@ public class Robot {
 			);
 		}
 
-		bananaShooter.init(
+		launcher.init(
 				telemetry,
-				this.hardwareMap.get(DcMotor.class, "banana")
+				this.hardwareMap.get(DcMotor.class, "bananaShooter"),
+				this.hardwareMap.get(Servo.class, "pinballArm")
+		);
+
+		intake.init(
+				telemetry,
+				this.hardwareMap.get(DcMotor.class, "outerIntake"),
+				this.hardwareMap.get(DcMotor.class, "innerIntake"),
+				this.hardwareMap.get(Servo.class, "intakeDrop")
 		);
 
 		wobbleGoalArm.init(
@@ -114,28 +111,10 @@ public class Robot {
 				this.hardwareMap.get(Servo.class, "wobbleClaw")
 		);
 
-		elevator.init(
-				telemetry,
-				this.hardwareMap.get(Servo.class, "elevatorLeft"),
-				this.hardwareMap.get(Servo.class, "elevatorRight")
-		);
-
 		wobbleHand.init(
 				telemetry,
 				this.hardwareMap.get(Servo.class, "wobbleHand")
 		);
-
-		ringStager.init(
-				this.hardwareMap.get(Servo.class, "ringStager")
-		);
-
-		if(isAuto) {
-			imu = new IMU(opmode);
-			imu.init(
-					telemetry,
-					this.hardwareMap.get(BNO055IMU.class, "imu")
-			);
-		}
 
 	}
 

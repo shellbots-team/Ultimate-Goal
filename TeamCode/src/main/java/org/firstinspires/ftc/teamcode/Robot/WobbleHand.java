@@ -20,11 +20,11 @@ public class WobbleHand extends RobotComponent {
 	}
 
 	public void grab() {
-		servo.setPosition(0);
+		servo.setPosition(0.05);
 	}
 
 	public void release() {
-		this.servo.setPosition(0.2);
+		this.servo.setPosition(0.5);
 	}
 
 	@Override

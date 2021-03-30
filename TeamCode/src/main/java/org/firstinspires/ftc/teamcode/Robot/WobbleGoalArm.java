@@ -31,7 +31,7 @@ public class WobbleGoalArm extends RobotComponent {
 
 	public void grabWobbleGoal() { claw.setPosition(0); }
 
-	public void releaseWobbleGoal() { claw.setPosition(1); }
+	public void releaseWobbleGoal() { claw.setPosition(0.6); }
 
 	@Override
 	public void stopAllMotors() {

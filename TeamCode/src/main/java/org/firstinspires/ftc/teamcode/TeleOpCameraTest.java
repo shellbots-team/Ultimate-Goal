@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Robot.CameraVision;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 
@@ -13,24 +14,24 @@ import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(group = "Manual", name = "Camera Test Manual")
 public class TeleOpCameraTest extends OpMode {
 
-	private Robot robot = new Robot();
 	private Logger logger = null;
+	private CameraVision cameraVision = null;
 
 	@Override
 	public void init() {
-		robot.init(hardwareMap, telemetry, this, false, false);
+		cameraVision = new CameraVision(hardwareMap);
 		logger = new Logger(telemetry);
 		this.msStuckDetectStop = 60000;
 
 		// Step 0 - Initialized
 		logger.statusLog(0, "Initialized");
-		robot.cameraVision.start();
+		cameraVision.start();
 	}
 
 	@Override
 	public void loop() {
-		SkystoneDeterminationPipeline.RingPosition rp = robot.cameraVision.getPosition();
-		int analysis = robot.cameraVision.getAnalysis();
+		SkystoneDeterminationPipeline.RingPosition rp = cameraVision.getPosition();
+		int analysis = cameraVision.getAnalysis();
 		logger.completeLog("14736: Ring Position", rp.toString() + " " + String.valueOf(analysis));
 		logger.update();
 	}
@@ -40,8 +41,7 @@ public class TeleOpCameraTest extends OpMode {
 	 */
 	@Override
 	public void stop() {
-		robot.cameraVision.end();
-		robot.stopAllMotors();
+		cameraVision.end();
 		logger.completeLog("Status", "Stopped");
 		logger.update();
 	}

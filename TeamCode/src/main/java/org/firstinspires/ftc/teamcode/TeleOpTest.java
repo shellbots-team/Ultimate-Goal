@@ -29,7 +29,7 @@ public class TeleOpTest extends OpMode {
 	 */
 	@Override
 	public void init() {
-		robot.init(hardwareMap, telemetry, this, false, false);
+		robot.init(hardwareMap, telemetry, this, false);
 		robot.drivetrain.runWithoutEncoders();
 		logger = new Logger(telemetry);
 

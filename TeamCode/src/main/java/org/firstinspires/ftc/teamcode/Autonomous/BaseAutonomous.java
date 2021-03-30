@@ -41,10 +41,9 @@ public abstract class BaseAutonomous extends LinearOpMode  {
 	@Override
 	public void runOpMode() {
 		this.msStuckDetectStop = 60000;
-		robot.init(hardwareMap, telemetry, this, true, false);
+		robot.init(hardwareMap, telemetry, this, false);
 		logger = new Logger(telemetry);
 		robot.cameraVision.start();
-		robot.imu.start();
 		sleep(1000);
 	}
 }

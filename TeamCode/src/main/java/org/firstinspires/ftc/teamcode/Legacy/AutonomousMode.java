@@ -21,7 +21,7 @@ public class AutonomousMode extends LinearOpMode {
 	public void runOpMode() {
 
 		// Initialize motors/servos
-		robot.init(hardwareMap, telemetry, this, true, false);
+		robot.init(hardwareMap, telemetry, this, false);
 
 		// Setting status to "Ready to run"
 		telemetry.addData("Status", "Ready To Run");

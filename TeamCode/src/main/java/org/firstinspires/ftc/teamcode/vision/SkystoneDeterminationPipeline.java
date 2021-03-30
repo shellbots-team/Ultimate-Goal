@@ -33,6 +33,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.io.File;
+import java.time.LocalDate;
 
 public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 	/*
@@ -48,30 +49,16 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 	/*
 	 * Some color constants
 	 */
+
 	static final Scalar BLUE = new Scalar(0, 0, 255);
 
-	/*
-	 * The core values which define the location and size of the sample regions
-	 * TODO: ADJUST TO MATCH CAMERA
-	 */
+	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(310, 40);
 
-	/*
-	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(432, 136);
+	static final int REGION_WIDTH = 120;
+	static final int REGION_HEIGHT = 150;
 
-	static final int REGION_WIDTH = 180;
-	static final int REGION_HEIGHT = 126;
-
-	final int FOUR_RING_THRESHOLD = 138;
-	final int ONE_RING_THRESHOLD = 130;
-	 */
-
-	static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(475, 660);
-
-	static final int REGION_WIDTH = 180;
-	static final int REGION_HEIGHT = 140;
-
-	final int FOUR_RING_THRESHOLD = 141;
-	final int ONE_RING_THRESHOLD = 135;
+	final int FOUR_RING_THRESHOLD = 140;
+	final int ONE_RING_THRESHOLD = 132;
 
 	Point region1_pointA = new Point(
 			REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -95,6 +82,7 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 	 * This function takes the RGB frame, converts to YCrCb,
 	 * and extracts the Cb channel to the 'Cb' variable
 	 */
+
 	void inputToCb(Mat input)
 	{
 		Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
@@ -136,6 +124,7 @@ public class SkystoneDeterminationPipeline extends OpenCvPipeline {
 		} else if(position == RingPosition.NONE) {
 			color = new Scalar(255, 0, 0); // Red
 		}
+
 		/*
 		 * Four:  Blue
 		 * One:   Green

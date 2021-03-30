@@ -12,14 +12,12 @@ import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 
-import java.lang.annotation.ElementType;
-
 /*
  * This is an example of a more complex path to really test the tuning.
  */
 @Config
 @Autonomous(group = "drive")
-public class AutonomousMode extends LinearOpMode {
+public class AutonomousModeSecond extends LinearOpMode {
 
 	public static double aFirstPositionX = 54;
 	public static double aFirstPositionY = 7;
@@ -29,20 +27,24 @@ public class AutonomousMode extends LinearOpMode {
 	public static double armRaisePower = 0.4;
 	public static double armRaisePowerTwo = 0.4;
 
-	public static double bSecondPositionX = 62;
-	public static double bSecondPositionY = -2;
+	public static double bSecondPositionX = 85;
+	public static double bSecondPositionY = 19.5;
 
+	public static double cThirdPositionH = 30;
 	public static double cThirdPositionT = 0;
-	public static double cThirdPositionX = 30.5;
-	public static double cThirdPositionY = 18;
+	public static double cThirdPositionX = 50;
+	public static double cThirdPositionY = 35;
 
-	public static double dFourthPositionH = 135;
-	public static double dFourthPositionX = 64;
-	public static double dFourthPositionY = 22;
+	public static double dFourthPositionX = 33.25;
+	public static double dFourthPositionY = 21;
 
-	public static double eFifthPositionH = -180;
-	public static double eFifthPositionX = 65;
-	public static double eFifthPositionY = 30;
+	public static double eFifthPositionH = 150;
+	public static double eFifthPositionX = 83.5;
+	public static double eFifthPositionY = 29.5;
+
+	public static double fSixthPositionH = 0;
+	public static double fSixthPositionX = 80;
+	public static double fSixthPositionY = 35;
 
 	public static double launcherSpeed = 0.835;
 	public static int timeBetweenLaunch = 1250;
@@ -69,15 +71,22 @@ public class AutonomousMode extends LinearOpMode {
 				.build();
 
 		Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-				.back(10)
-				.splineToConstantHeading(new Vector2d(cThirdPositionX, cThirdPositionY), Math.toRadians(cThirdPositionT))
+				.lineToConstantHeading(new Vector2d(bSecondPositionX - 10, bSecondPositionY))
 				.build();
 
 		Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-				.lineToLinearHeading(new Pose2d(dFourthPositionX, dFourthPositionY, Math.toRadians(dFourthPositionH)))
+				.lineToLinearHeading(new Pose2d(cThirdPositionX, cThirdPositionY, Math.toRadians(cThirdPositionH)))
 				.build();
 
 		Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
+				.lineToConstantHeading(new Vector2d(dFourthPositionX, dFourthPositionY))
+				.build();
+
+		Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+				.lineToLinearHeading(new Pose2d(cThirdPositionX, cThirdPositionY, Math.toRadians(eFifthPositionH)))
+				.build();
+
+		Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
 				.lineToLinearHeading(new Pose2d(eFifthPositionX, eFifthPositionY, Math.toRadians(eFifthPositionH)))
 				.build();
 
@@ -115,13 +124,17 @@ public class AutonomousMode extends LinearOpMode {
 		sleep(1000);
 
 		drive.followTrajectory(traj3);
+		drive.followTrajectory(traj4);
+		drive.followTrajectory(traj5);
+
 		robot.wobbleGoalArm.grabWobbleGoal();
 		sleep(1000);
 		robot.wobbleGoalArm.giveArmPower(armRaisePower);
 
-		drive.followTrajectory(traj4);
+		drive.followTrajectory(traj6);
+		drive.followTrajectory(traj7);
 
-		sleep(1000);
+		sleep(200);
 
 		robot.wobbleGoalArm.giveArmPower(armLowerPowerTwo);
 
@@ -130,11 +143,8 @@ public class AutonomousMode extends LinearOpMode {
 		robot.wobbleGoalArm.releaseWobbleGoal();
 		sleep(1000);
 		robot.wobbleGoalArm.giveArmPower(armRaisePowerTwo);
-		sleep(500);
+		sleep(550);
 		robot.wobbleGoalArm.giveArmPower(0);
 
-		drive.followTrajectory(traj5);
-
-		sleep(1000);
 	}
 }

@@ -13,7 +13,7 @@ public class CameraVision {
 	private OpenCvCamera webcam;
 	private SkystoneDeterminationPipeline pipeline;
 
-	CameraVision(HardwareMap hardwareMap) {
+	public CameraVision(HardwareMap hardwareMap) {
 		int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 		webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "TensorFlowCamera"), cameraMonitorViewId);
 		pipeline = new SkystoneDeterminationPipeline();

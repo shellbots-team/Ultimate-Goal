@@ -55,7 +55,7 @@ public class Drivetrain extends RobotComponent {
 		setAllPowers(0);
 
 		// Set all motors to run using encoders
-		setRunMode(DcMotor.RunMode.RUN_USING_ENCODER, frontLeft, frontRight, backLeft, backRight);
+		setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER, frontLeft, frontRight, backLeft, backRight);
 	}
 
 	@Override
@@ -154,20 +154,6 @@ public class Drivetrain extends RobotComponent {
 				(frontLeft.isBusy() && backLeft.isBusy()) &&
 				(frontRight.isBusy() && backRight.isBusy())) {
 
-			/*
-			double flc = frontLeft.getCurrentPosition();
-			double flt = frontLeft.getTargetPosition();
-			frontLeft.setPower( Math.abs( Math.sin(Math.PI/3*((flt-flc)/flTotal)+Math.PI/3) ) );
-			double frc = frontRight.getCurrentPosition();
-			double frt = frontRight.getTargetPosition();
-			frontRight.setPower( Math.abs( Math.sin(Math.PI/3*((frt-frc)/frTotal)+Math.PI/3) ) );
-			double blc = backLeft.getCurrentPosition();
-			double blt = backLeft.getTargetPosition();
-			backLeft.setPower( Math.abs( Math.sin(Math.PI/3*((blt-blc)/blTotal)+Math.PI/3) ) );
-			double brc = backRight.getCurrentPosition();
-			double brt = backRight.getTargetPosition();
-			backRight.setPower( Math.abs( Math.sin(Math.PI/3*((brt-brc)/brTotal)+Math.PI/3) ) );
-			 */
 			normalizePower(maxSpeed, frTotal, frontRight);
 			normalizePower(maxSpeed, flTotal, frontLeft);
 			normalizePower(maxSpeed, brTotal, backRight);

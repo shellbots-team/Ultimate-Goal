@@ -16,7 +16,7 @@ public class TeleOp extends OpMode {
 	private Robot robot = new Robot();
 	private Logger logger = null;
 	private double speed = 0.5;
-	private double shootSpeed = 1;
+	private double shootSpeed = 1.00;
 	private int count = 0;
 	private boolean last_g2_x = false;
 	private boolean last_g2_b = false;
@@ -28,8 +28,7 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void init() {
-		robot.init(hardwareMap, telemetry, this, false, false);
-		robot.drivetrain.runWithoutEncoders();
+		robot.init(hardwareMap, telemetry, this, false);
 		logger = new Logger(telemetry);
 
 		// Step 0 - Initialized
@@ -58,6 +57,8 @@ public class TeleOp extends OpMode {
 	public void loop() {
 
 		// Player 1
+
+		// TODO: Figure out all the controls
 
 		// Move according to player 1's joysticks
 		singleJoystickDrive();
@@ -96,16 +97,19 @@ public class TeleOp extends OpMode {
 		logger.completeLog("Shoot Speed", String.valueOf(shootSpeed));
 
 		if(gamepad2.left_trigger > 0.5) {
-			robot.bananaShooter.run(shootSpeed);
+			robot.launcher.run(shootSpeed);
 		} else {
-			robot.bananaShooter.run(0);
+			robot.launcher.run(0);
 		}
 
-		if(gamepad2.right_trigger > 0.5) {
-			robot.elevator.close();
-		} else {
-			robot.elevator.open();
+		if(gamepad1.dpad_down) { robot.intake.drop(); }
+
+		if(gamepad2.dpad_up) {
+			robot.wobbleHand.release();
+		} else if(gamepad2.dpad_down) {
+			robot.wobbleHand.grab();
 		}
+
 
 		if(!last_g2_x && gamepad2.x) {
 			if(wobbleOpen) {
@@ -119,9 +123,9 @@ public class TeleOp extends OpMode {
 
 		if(!last_g2_b && gamepad2.b) {
 			if(grabOpen) {
-				robot.ringStager.grab();
+				robot.launcher.push();
 			} else {
-				robot.ringStager.drop();
+				robot.launcher.reset();
 			}
 			grabOpen = !grabOpen;
 		}
@@ -133,6 +137,15 @@ public class TeleOp extends OpMode {
 			robot.wobbleGoalArm.giveArmPower(0);
 		}
 
+		if(gamepad2.right_trigger > 0.5) {
+			robot.intake.outerIntake(1);
+			robot.intake.innerIntake(1);
+		} else {
+			robot.intake.outerIntake(0);
+			robot.intake.innerIntake(0);
+		}
+
+		telemetry.update();
 	}
 
 	/**
