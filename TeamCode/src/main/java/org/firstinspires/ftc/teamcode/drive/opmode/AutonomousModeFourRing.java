@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Robot.Robot;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
  */
 @Config
 @Autonomous(group = "drive")
-public class AutonomousModeSecond extends LinearOpMode {
+public class AutonomousModeFourRing extends LinearOpMode {
 
 	public static double aFirstPositionX = 54;
 	public static double aFirstPositionY = 7;
@@ -27,40 +28,30 @@ public class AutonomousModeSecond extends LinearOpMode {
 	public static double armRaisePower = 0.4;
 	public static double armRaisePowerTwo = 0.4;
 
-	public static double bSecondPositionX = 85;
-	public static double bSecondPositionY = 19.5;
+	public static double bSecondPositionX = 107;
+	public static double bSecondPositionY = 2;
 
-	public static double cThirdPositionH = 30;
-	public static double cThirdPositionT = 0;
-	public static double cThirdPositionX = 50;
-	public static double cThirdPositionY = 35;
+	public static double cThirdPositionX = 35;
+	public static double cThirdPositionY = 4;
 
-	public static double dFourthPositionX = 33.25;
-	public static double dFourthPositionY = 21;
+	public static double dFourthPositionH = -55;
+	public static double dFourthPositionX = 29.5;
+	public static double dFourthPositionY = 15;
 
-	public static double eFifthPositionH = 150;
-	public static double eFifthPositionX = 83.5;
-	public static double eFifthPositionY = 29.5;
+	public static double eFifthPositionH = 180;
+	public static double eFifthPositionX = 30;
+	public static double eFifthPositionY = -2;
 
-	public static double fSixthPositionH = 0;
-	public static double fSixthPositionX = 80;
-	public static double fSixthPositionY = 35;
+	public static double fSixthPositionX = 100;
+	public static double fSixthPositionY = 0;
+
+	public static double gSeventhPositionX = 65;
+	public static double gSeventhPositionY = 7;
 
 	public static double launcherSpeed = 0.835;
 	public static int timeBetweenLaunch = 1250;
 
-	@Override
-	public void runOpMode() throws InterruptedException {
-		SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-		Robot robot = new Robot();
-		robot.init(hardwareMap, telemetry, this, true);
-
-		robot.cameraVision.start();
-		robot.wobbleHand.grab();
-
-		ElapsedTime t = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-		double currentTime = t.time();
-		//while(t.time() - currentTime < 5) { idle(); }
+	public static void run(SampleMecanumDrive drive, Robot robot, Telemetry telemetry, LinearOpMode opMode) {
 
 		Trajectory traj = drive.trajectoryBuilder(new Pose2d())
 				.splineToConstantHeading(new Vector2d(aFirstPositionX, aFirstPositionY), 0)
@@ -71,36 +62,24 @@ public class AutonomousModeSecond extends LinearOpMode {
 				.build();
 
 		Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-				.lineToConstantHeading(new Vector2d(bSecondPositionX - 10, bSecondPositionY))
+				.lineToConstantHeading(new Vector2d(cThirdPositionX, cThirdPositionY))
 				.build();
 
 		Trajectory traj4 = drive.trajectoryBuilder(traj3.end())
-				.lineToLinearHeading(new Pose2d(cThirdPositionX, cThirdPositionY, Math.toRadians(cThirdPositionH)))
+				.lineToLinearHeading(new Pose2d(dFourthPositionX, dFourthPositionY, Math.toRadians(dFourthPositionH)))
 				.build();
 
 		Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-				.lineToConstantHeading(new Vector2d(dFourthPositionX, dFourthPositionY))
-				.build();
-
-		Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
-				.lineToLinearHeading(new Pose2d(cThirdPositionX, cThirdPositionY, Math.toRadians(eFifthPositionH)))
-				.build();
-
-		Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
 				.lineToLinearHeading(new Pose2d(eFifthPositionX, eFifthPositionY, Math.toRadians(eFifthPositionH)))
 				.build();
 
-		telemetry.addData("Status", "Ready to run");
-		telemetry.update();
+		Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
+				.lineToConstantHeading(new Vector2d(fSixthPositionX, fSixthPositionY))
+				.build();
 
-		waitForStart();
-
-		if (isStopRequested()) return;
-
-		SkystoneDeterminationPipeline.RingPosition x = robot.cameraVision.getPosition();
-		int ringAnalysis = robot.cameraVision.getAnalysis();
-		telemetry.addData("Position", x.toString() + " " + String.valueOf(ringAnalysis));
-		telemetry.update();
+		Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+				.lineToConstantHeading(new Vector2d(gSeventhPositionX, gSeventhPositionY))
+				.build();
 
 		robot.launcher.run(launcherSpeed + 0.03);
 
@@ -108,10 +87,10 @@ public class AutonomousModeSecond extends LinearOpMode {
 
 		for(int i = 0; i < 3; i++) {
 			robot.launcher.push();
-			sleep(timeBetweenLaunch / 2);
+			opMode.sleep(timeBetweenLaunch / 2);
 			robot.launcher.reset();
 			robot.launcher.run(launcherSpeed);
-			sleep(timeBetweenLaunch / 2);
+			opMode.sleep(timeBetweenLaunch / 2);
 		}
 
 		robot.launcher.run(0);
@@ -121,30 +100,50 @@ public class AutonomousModeSecond extends LinearOpMode {
 		robot.wobbleHand.release();
 		robot.wobbleGoalArm.giveArmPower(armLowerPower);
 		robot.wobbleGoalArm.releaseWobbleGoal();
-		sleep(1000);
+		opMode.sleep(1000);
 
 		drive.followTrajectory(traj3);
 		drive.followTrajectory(traj4);
-		drive.followTrajectory(traj5);
 
 		robot.wobbleGoalArm.grabWobbleGoal();
-		sleep(1000);
+		opMode.sleep(1000);
 		robot.wobbleGoalArm.giveArmPower(armRaisePower);
 
+		drive.followTrajectory(traj5);
 		drive.followTrajectory(traj6);
-		drive.followTrajectory(traj7);
 
-		sleep(200);
+		opMode.sleep(200);
 
 		robot.wobbleGoalArm.giveArmPower(armLowerPowerTwo);
 
-		sleep(1000);
+		opMode.sleep(1000);
 
 		robot.wobbleGoalArm.releaseWobbleGoal();
-		sleep(1000);
+		opMode.sleep(1000);
 		robot.wobbleGoalArm.giveArmPower(armRaisePowerTwo);
-		sleep(550);
+		opMode.sleep(550);
 		robot.wobbleGoalArm.giveArmPower(0);
+
+		drive.followTrajectory(traj7);
+	}
+
+	@Override
+	public void runOpMode() throws InterruptedException {
+		SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+		Robot robot = new Robot();
+		robot.init(hardwareMap, telemetry, this, true);
+
+		robot.cameraVision.start();
+		robot.wobbleHand.grab();
+
+		telemetry.addData("Status", "WRONG OPMODE");
+		telemetry.update();
+
+		waitForStart();
+
+		if (isStopRequested()) return;
+
+		AutonomousModeFourRing.run(drive, robot, telemetry, this);
 
 	}
 }

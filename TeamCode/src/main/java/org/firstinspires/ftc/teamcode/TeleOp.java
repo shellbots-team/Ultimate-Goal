@@ -58,7 +58,18 @@ public class TeleOp extends OpMode {
 
 		// Player 1
 
-		// TODO: Figure out all the controls
+		/*
+		Gamepad 1
+		Normal
+
+		Gamepad 2
+		up dpad = arm rotate out
+		down dpad = arm rotate in
+		x grab
+		b open
+		left trigger = charge shooter
+		tap right trigger shoots
+		 */
 
 		// Move according to player 1's joysticks
 		singleJoystickDrive();
@@ -72,6 +83,7 @@ public class TeleOp extends OpMode {
 
 		// Player 2
 
+		/*
 		if(TUNING) {
 			if (gamepad2.a) {
 				if (count % 100 == 0) {
@@ -93,56 +105,32 @@ public class TeleOp extends OpMode {
 				count = 0;
 			}
 		}
+		 */
 
-		logger.completeLog("Shoot Speed", String.valueOf(shootSpeed));
+		if(gamepad2.right_trigger > 0.5) {
+			robot.launcher.push();
+		} else {
+			robot.launcher.reset();
+		}
 
 		if(gamepad2.left_trigger > 0.5) {
-			robot.launcher.run(shootSpeed);
+			robot.launcher.run(1);
 		} else {
 			robot.launcher.run(0);
 		}
 
-		if(gamepad1.dpad_down) { robot.intake.drop(); }
-
 		if(gamepad2.dpad_up) {
-			robot.wobbleHand.release();
+			robot.wobbleGoalArm.giveArmPower(-0.6);
 		} else if(gamepad2.dpad_down) {
-			robot.wobbleHand.grab();
-		}
-
-
-		if(!last_g2_x && gamepad2.x) {
-			if(wobbleOpen) {
-				robot.wobbleGoalArm.releaseWobbleGoal();
-			} else {
-				robot.wobbleGoalArm.grabWobbleGoal();
-			}
-			wobbleOpen = !wobbleOpen;
-		}
-		last_g2_x = gamepad2.x;
-
-		if(!last_g2_b && gamepad2.b) {
-			if(grabOpen) {
-				robot.launcher.push();
-			} else {
-				robot.launcher.reset();
-			}
-			grabOpen = !grabOpen;
-		}
-		last_g2_b = gamepad2.b;
-
-		if(Math.abs(gamepad2.left_stick_y) > 0.05) {
-			robot.wobbleGoalArm.giveArmPower(gamepad2.left_stick_y / 0.8);
+			robot.wobbleGoalArm.giveArmPower(0.6);
 		} else {
 			robot.wobbleGoalArm.giveArmPower(0);
 		}
 
-		if(gamepad2.right_trigger > 0.5) {
-			robot.intake.outerIntake(1);
-			robot.intake.innerIntake(1);
-		} else {
-			robot.intake.outerIntake(0);
-			robot.intake.innerIntake(0);
+		if(gamepad2.x) {
+			robot.wobbleGoalArm.grabWobbleGoal();
+		} else if(gamepad2.b) {
+			robot.wobbleGoalArm.releaseWobbleGoal();
 		}
 
 		telemetry.update();
