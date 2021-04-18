@@ -16,12 +16,15 @@ public class TeleOp extends OpMode {
 	private Robot robot = new Robot();
 	private Logger logger = null;
 	private double speed = 0.5;
-	private double shootSpeed = 1.00;
+	private double shootSpeed = 0.835;
 	private int count = 0;
 	private boolean last_g2_x = false;
 	private boolean last_g2_b = false;
 	private boolean wobbleOpen = false;
 	private boolean grabOpen = false;
+	private double outerIntake = 0;
+	private double interIntake = 0;
+	private boolean dropServo = false;
 
 	/**
 	 * Run once after INIT is pushed
@@ -53,59 +56,92 @@ public class TeleOp extends OpMode {
 		logger.statusLog(0, "Playing");
 	}
 
+
+		/*
+		// |----------------------------------------------------------------------------------------
+		Gamepad 1: (driver 1)
+		joysticks = drivetrain
+		right bumper = outer intake and inner intake
+	  	left bumper = outer intake and inner intake reversed
+	  	right trigger = full speed
+	  	left trigger = half speed
+		y = drop outer intake
+
+		// |----------------------------------------------------------------------------------------
+		Gamepad 2: (driver 2)
+		up dpad = wobble arm up
+		down dpad = wobble arm down
+		x = grab wobble goal
+		b = release wobble goal
+		left trigger = charge shooter
+		right trigger = launch ring
+		*/
+
+
 	@Override
 	public void loop() {
 
-		// Player 1
+		// |----------------------------------------------------------------------------------------
+		// Gamepad 1: (driver 1)
 
-		/*
-		Gamepad 1
-		Normal
-
-		Gamepad 2
-		up dpad = arm rotate out
-		down dpad = arm rotate in
-		x grab
-		b open
-		left trigger = charge shooter
-		tap right trigger shoots
-		 */
 
 		// Move according to player 1's joysticks
 		singleJoystickDrive();
 
+		if (this.gamepad1.y == true) {
+			robot.intake.drop();
+		}
+
+		if (this.gamepad1.right_bumper == true) {
+			robot.intake.outerIntake(1);
+			robot.intake.innerIntake(1);
+		}
+		else if (this.gamepad1.right_bumper == false) {
+			robot.intake.outerIntake(0);
+			robot.intake.innerIntake(0);
+		}
+
+		if (this.gamepad1.left_bumper == true) {
+			robot.intake.outerIntake(-1);
+			robot.intake.innerIntake(-1);
+		}
+		else if (this.gamepad1.left_bumper == false) {
+			robot.intake.outerIntake(0);
+			robot.intake.innerIntake(0);
+		}
+
 		// Change driving speed
 		if (this.gamepad1.right_trigger > 0.5) {
 			speed = 1.0;
-		} else if (this.gamepad1.left_trigger > 0.5) {
+		}
+		else if (this.gamepad1.left_trigger > 0.5) {
 			speed = 0.5;
 		}
 
-		// Player 2
 
-		/*
-		if(TUNING) {
-			if (gamepad2.a) {
-				if (count % 100 == 0) {
-					shootSpeed -= 0.01;
-					if (shootSpeed < 0) {
-						shootSpeed = 0;
-					}
+		// |----------------------------------------------------------------------------------------
+		// Gamepad 2: (driver 2)
+
+
+		if (gamepad2.a) {
+			if (count % 100 == 0) {
+				shootSpeed -= 0.01;
+				if (shootSpeed < 0) {
+					shootSpeed = 0;
 				}
-				count++;
-			} else if (gamepad2.y) {
-				if (count % 100 == 0) {
-					shootSpeed += 0.01;
-				}
-				if (shootSpeed > 1) {
-					shootSpeed = 1;
-				}
-				count++;
-			} else {
-				count = 0;
 			}
+			count++;
+		} else if (gamepad2.y) {
+			if (count % 100 == 0) {
+				shootSpeed += 0.01;
+			}
+			if (shootSpeed > 1) {
+				shootSpeed = 1;
+			}
+			count++;
+		} else {
+			count = 0;
 		}
-		 */
 
 		if(gamepad2.right_trigger > 0.5) {
 			robot.launcher.push();
@@ -114,7 +150,7 @@ public class TeleOp extends OpMode {
 		}
 
 		if(gamepad2.left_trigger > 0.5) {
-			robot.launcher.run(1);
+			robot.launcher.run(shootSpeed);
 		} else {
 			robot.launcher.run(0);
 		}
@@ -133,6 +169,7 @@ public class TeleOp extends OpMode {
 			robot.wobbleGoalArm.releaseWobbleGoal();
 		}
 
+		telemetry.addData("Launch Speed", shootSpeed);
 		telemetry.update();
 	}
 

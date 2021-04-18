@@ -28,10 +28,13 @@ public class AutonomousMode extends LinearOpMode {
 
 		robot.cameraVision.start();
 		robot.wobbleHand.grab();
+		robot.intake.setHold();
 
 		ElapsedTime t = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 		double currentTime = t.time();
-		while(t.time() - currentTime < 5) { idle(); }
+		while (t.time() - currentTime < 5) {
+			idle();
+		}
 
 		telemetry.addData("Status", "Ready to run");
 		telemetry.update();
@@ -44,12 +47,15 @@ public class AutonomousMode extends LinearOpMode {
 		telemetry.addData("Ring", ringPosition.toString());
 		telemetry.update();
 
-		if(ringPosition == SkystoneDeterminationPipeline.RingPosition.FOUR) {
+		if (ringPosition == SkystoneDeterminationPipeline.RingPosition.FOUR) {
 			AutonomousModeFourRing.run(drive, robot, telemetry, this);
-		} else if(ringPosition == SkystoneDeterminationPipeline.RingPosition.ONE) {
+		} else if (ringPosition == SkystoneDeterminationPipeline.RingPosition.ONE) {
 			AutonomousModeSingleRing.run(drive, robot, telemetry, this);
 		} else {
 			AutonomousModeNoRing.run(drive, robot, telemetry, this);
 		}
+
+		drive.cancelFollowing();
 	}
+
 }

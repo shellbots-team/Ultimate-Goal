@@ -94,7 +94,7 @@ public class Robot {
 
 		launcher.init(
 				telemetry,
-				this.hardwareMap.get(DcMotor.class, "bananaShooter"),
+				this.hardwareMap.get(DcMotorEx.class, "bananaShooter"),
 				this.hardwareMap.get(Servo.class, "pinballArm")
 		);
 
@@ -102,7 +102,8 @@ public class Robot {
 				telemetry,
 				this.hardwareMap.get(DcMotor.class, "outerIntake"),
 				this.hardwareMap.get(DcMotor.class, "innerIntake"),
-				this.hardwareMap.get(Servo.class, "intakeDrop")
+				this.hardwareMap.get(Servo.class, "intakeDrop"),
+				this.hardwareMap.get(Servo.class, "intakeHold")
 		);
 
 		wobbleGoalArm.init(

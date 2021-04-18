@@ -23,29 +23,30 @@ import java.lang.annotation.ElementType;
 public class AutonomousModeNoRing extends LinearOpMode {
 
 	public static double aFirstPositionX = 54;
-	public static double aFirstPositionY = 7;
+	public static double aFirstPositionY = 6;
 
 	public static double armLowerPower = -0.4;
 	public static double armLowerPowerTwo = -0.4;
 	public static double armRaisePower = 0.4;
-	public static double armRaisePowerTwo = 0.4;
+	public static double armRaisePowerTwo = 0.422;
 
 	public static double bSecondPositionX = 59;
 	public static double bSecondPositionY = -2;
 
 	public static double cThirdPositionT = 0;
 	public static double cThirdPositionX = 29.5;
-	public static double cThirdPositionY = 17;
+	public static double cThirdPositionY = 15.5;
 
 	public static double dFourthPositionH = 135;
-	public static double dFourthPositionX = 69;
-	public static double dFourthPositionY = 14.75;
+	public static double dFourthPositionX = 61.25;
+	public static double dFourthPositionY = 15.5;
 
 	public static double eFifthPositionH = -180;
 	public static double eFifthPositionX = 65;
-	public static double eFifthPositionY = 30;
+	public static double eFifthPositionY = 25;
 
-	public static double launcherSpeed = 0.835;
+	public static double launcherSpeed = 0.82;
+	public static double powerIncr = 0.008;
 	public static int timeBetweenLaunch = 1250;
 
 	public static void run(SampleMecanumDrive drive, Robot robot, Telemetry telemetry, LinearOpMode opMode) {
@@ -70,7 +71,9 @@ public class AutonomousModeNoRing extends LinearOpMode {
 				.lineToLinearHeading(new Pose2d(eFifthPositionX, eFifthPositionY, Math.toRadians(eFifthPositionH)))
 				.build();
 
-		robot.launcher.run(launcherSpeed + 0.03);
+		double decreaseInPower = 0;
+
+		robot.launcher.run(launcherSpeed - decreaseInPower);
 
 		drive.followTrajectory(traj);
 
@@ -78,7 +81,8 @@ public class AutonomousModeNoRing extends LinearOpMode {
 			robot.launcher.push();
 			opMode.sleep(timeBetweenLaunch / 2);
 			robot.launcher.reset();
-			robot.launcher.run(launcherSpeed);
+			decreaseInPower += powerIncr;
+			robot.launcher.run(launcherSpeed - decreaseInPower);
 			opMode.sleep(timeBetweenLaunch / 2);
 		}
 
@@ -111,6 +115,8 @@ public class AutonomousModeNoRing extends LinearOpMode {
 		robot.wobbleGoalArm.giveArmPower(0);
 
 		drive.followTrajectory(traj5);
+
+		robot.intake.releaseHold();
 
 		opMode.sleep(1000);
 	}

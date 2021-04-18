@@ -35,7 +35,7 @@ public class AutonomousModeFourRing extends LinearOpMode {
 	public static double cThirdPositionY = 4;
 
 	public static double dFourthPositionH = -55;
-	public static double dFourthPositionX = 29.5;
+	public static double dFourthPositionX = 27;
 	public static double dFourthPositionY = 15;
 
 	public static double eFifthPositionH = 180;
@@ -48,7 +48,8 @@ public class AutonomousModeFourRing extends LinearOpMode {
 	public static double gSeventhPositionX = 65;
 	public static double gSeventhPositionY = 7;
 
-	public static double launcherSpeed = 0.835;
+	public static double launcherSpeed = 0.82;
+	public static double powerIncr = 0.008;
 	public static int timeBetweenLaunch = 1250;
 
 	public static void run(SampleMecanumDrive drive, Robot robot, Telemetry telemetry, LinearOpMode opMode) {
@@ -81,7 +82,9 @@ public class AutonomousModeFourRing extends LinearOpMode {
 				.lineToConstantHeading(new Vector2d(gSeventhPositionX, gSeventhPositionY))
 				.build();
 
-		robot.launcher.run(launcherSpeed + 0.03);
+		double decreaseInPower = 0;
+
+		robot.launcher.run(launcherSpeed - decreaseInPower);
 
 		drive.followTrajectory(traj);
 
@@ -89,7 +92,8 @@ public class AutonomousModeFourRing extends LinearOpMode {
 			robot.launcher.push();
 			opMode.sleep(timeBetweenLaunch / 2);
 			robot.launcher.reset();
-			robot.launcher.run(launcherSpeed);
+			decreaseInPower += powerIncr;
+			robot.launcher.run(launcherSpeed - decreaseInPower);
 			opMode.sleep(timeBetweenLaunch / 2);
 		}
 
@@ -125,6 +129,10 @@ public class AutonomousModeFourRing extends LinearOpMode {
 		robot.wobbleGoalArm.giveArmPower(0);
 
 		drive.followTrajectory(traj7);
+
+		robot.intake.releaseHold();
+
+		opMode.sleep(50);
 	}
 
 	@Override

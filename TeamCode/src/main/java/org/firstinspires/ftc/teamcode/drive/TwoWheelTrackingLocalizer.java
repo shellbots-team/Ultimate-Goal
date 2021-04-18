@@ -40,6 +40,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 	public static double WHEEL_RADIUS = 0.6889764; // in
 	public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
+	public static double X_MULTIPLIER = 100/100.644706428; // Multiplier in the X direction
+	public static double Y_MULTIPLIER = 100/99.9894012616; // Multiplier in the Y direction
+
+
 	public static double PARALLEL_X = 0; // X is the up and down direction
 	public static double PARALLEL_Y = 8; // Y is the strafe direction
 
@@ -87,8 +91,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 	@Override
 	public List<Double> getWheelPositions() {
 		return Arrays.asList(
-				encoderTicksToInches(parallelEncoder.getCurrentPosition()),
-				encoderTicksToInches(perpendicularEncoder.getCurrentPosition())
+				encoderTicksToInches(parallelEncoder.getCurrentPosition()) * X_MULTIPLIER,
+				encoderTicksToInches(perpendicularEncoder.getCurrentPosition()) * Y_MULTIPLIER
 		);
 	}
 
@@ -100,8 +104,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 		//  compensation method
 
 		return Arrays.asList(
-				encoderTicksToInches(parallelEncoder.getCorrectedVelocity()),
-				encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity())
+				encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
+				encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
 		);
 	}
 }

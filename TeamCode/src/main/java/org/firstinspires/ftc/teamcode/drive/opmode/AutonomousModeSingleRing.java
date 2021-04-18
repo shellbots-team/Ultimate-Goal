@@ -21,23 +21,22 @@ import org.firstinspires.ftc.teamcode.vision.SkystoneDeterminationPipeline;
 public class AutonomousModeSingleRing extends LinearOpMode {
 
 	public static double aFirstPositionX = 54;
-	public static double aFirstPositionY = 7;
+	public static double aFirstPositionY = 6;
 
 	public static double armLowerPower = -0.4;
 	public static double armLowerPowerTwo = -0.4;
 	public static double armRaisePower = 0.4;
 	public static double armRaisePowerTwo = 0.4;
 
-	public static double bSecondPositionX = 86;
-	public static double bSecondPositionY = 19;
+	public static double bSecondPositionX = 81.5;
+	public static double bSecondPositionY = 18.5;
 
 	public static double cThirdPositionH = 35;
-	public static double cThirdPositionT = 0;
 	public static double cThirdPositionX = 50;
 	public static double cThirdPositionY = 35;
 
-	public static double dFourthPositionX = 40.5;
-	public static double dFourthPositionY = 17;
+	public static double dFourthPositionX = 32;
+	public static double dFourthPositionY = 20.5;
 
 	public static double eFifthPositionH = 150;
 	public static double eFifthPositionX = 81;
@@ -48,7 +47,8 @@ public class AutonomousModeSingleRing extends LinearOpMode {
 	public static double fSixthPositionX = 75;
 	public static double fSixthPositionY = 32;
 
-	public static double launcherSpeed = 0.835;
+	public static double launcherSpeed = 0.82;
+	public static double powerIncr = 0.008;
 	public static int timeBetweenLaunch = 1250;
 
 	public static void run(SampleMecanumDrive drive, Robot robot, Telemetry telemetry, LinearOpMode opMode) {
@@ -86,7 +86,9 @@ public class AutonomousModeSingleRing extends LinearOpMode {
 				.build();
 
 
-		robot.launcher.run(launcherSpeed + 0.03);
+		double decreaseInPower = 0;
+
+		robot.launcher.run(launcherSpeed - decreaseInPower);
 
 		drive.followTrajectory(traj);
 
@@ -94,7 +96,8 @@ public class AutonomousModeSingleRing extends LinearOpMode {
 			robot.launcher.push();
 			opMode.sleep(timeBetweenLaunch / 2);
 			robot.launcher.reset();
-			robot.launcher.run(launcherSpeed);
+			decreaseInPower += powerIncr;
+			robot.launcher.run(launcherSpeed - decreaseInPower);
 			opMode.sleep(timeBetweenLaunch / 2);
 		}
 
@@ -111,6 +114,7 @@ public class AutonomousModeSingleRing extends LinearOpMode {
 		drive.followTrajectory(traj4);
 		drive.followTrajectory(traj5);
 
+		opMode.sleep(1000);
 		robot.wobbleGoalArm.grabWobbleGoal();
 		opMode.sleep(1000);
 		robot.wobbleGoalArm.giveArmPower(armRaisePower);
@@ -131,6 +135,10 @@ public class AutonomousModeSingleRing extends LinearOpMode {
 		robot.wobbleGoalArm.giveArmPower(0);
 
 		drive.followTrajectory(traj8);
+
+		robot.intake.releaseHold();
+
+		opMode.sleep(500);
 	}
 
 	@Override
